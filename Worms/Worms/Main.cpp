@@ -1,3 +1,35 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 
 Se utiliza la misma FSM del otro TP pero ahora hay que implementarla con un contenido.
@@ -42,8 +74,8 @@ class Observer {
 
 class drawScenario : public Observer {
 	public:
-	void update(void* data);
 	drawScenario(ALLEGRO_BITMAP wallpaper, ALLEGRO_DISPLAY disp, etc);
+	void update(void* data);
 	
 	private:
 	drawWorm();

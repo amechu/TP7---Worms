@@ -1,6 +1,6 @@
 #pragma once
 #include "Observer.h"
-#include <list>
+#include <vector>
 
 /*
 Clase sujeto. Posee una lista de observadores registrados, a los cuales notifica cada vez
@@ -18,9 +18,9 @@ public:
 	virtual ~Subject();
 	virtual void update();
 	virtual void registerObserver(Observer* observer);
-	virtual void unregisterObserver(Observer* observer);
+	virtual void unregisterObserver(Observers index);
 
 protected:
-	std::list<Observer*> observerList;
+	std::vector<Observer*> observerList;
 };
 

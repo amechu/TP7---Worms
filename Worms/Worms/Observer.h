@@ -14,6 +14,8 @@ sujetos cambia, el observador es notificado y a partir del estado de los Subject
 
 */
 
+enum class Observers {};
+
 class Observer
 {
 public:

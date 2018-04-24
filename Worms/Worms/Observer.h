@@ -21,6 +21,6 @@ class Observer
 public:
 	Observer();
 	virtual ~Observer();
-	virtual void update(void* subject) = 0;
+	virtual void update(void* subject, void* tool) = 0;
 };
 

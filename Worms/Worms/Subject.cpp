@@ -1,7 +1,6 @@
 #include "Subject.h"
 
 
-
 Subject::Subject()
 {
 }
@@ -11,10 +10,10 @@ Subject::~Subject()
 {
 }
 
-void Subject::update()
+void Subject::notify(void* tool)
 {
 	for (Observer* observer : this->observerList) {
-		observer->update(this);
+		observer->update(this, tool);
 	}
 }
 
@@ -26,4 +25,9 @@ void Subject::registerObserver(Observer * observer)
 void Subject::unregisterObserver(Observers index)
 {
 	this->observerList.erase(observerList.begin() + (int) index);
+}
+
+lastAction Subject::getLastAction()
+{
+	return this->lastAction;
 }

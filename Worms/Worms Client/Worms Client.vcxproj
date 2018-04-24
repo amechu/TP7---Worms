@@ -20,10 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{0278F06A-E41E-4FF0-9C59-4DE3AE5F5820}</ProjectGuid>
-    <RootNamespace>Worms</RootNamespace>
+    <ProjectGuid>{74A920DA-94A7-43AE-A182-3558A68FBAF2}</ProjectGuid>
+    <RootNamespace>WormsClient</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>Worms Server</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -70,14 +69,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Allegro_AddonImage>true</Allegro_AddonImage>
-    <Allegro_AddonTTF>true</Allegro_AddonTTF>
-    <Allegro_AddonPrimitives>true</Allegro_AddonPrimitives>
-    <Allegro_AddonAudio>true</Allegro_AddonAudio>
-    <Allegro_AddonAcodec>true</Allegro_AddonAcodec>
-    <Allegro_AddonFont>true</Allegro_AddonFont>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -123,84 +115,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="AllegroTools.cpp" />
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="Dispatcher.cpp" />
-    <ClCompile Include="Drawer.cpp" />
-    <ClCompile Include="EventGenerator.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Observer.cpp" />
-    <ClCompile Include="Packager.cpp" />
-    <ClCompile Include="Scenario.cpp" />
-    <ClCompile Include="Sender.cpp" />
-    <ClCompile Include="Server.cpp" />
-    <ClCompile Include="Subject.cpp" />
-    <ClCompile Include="DrawingInfo.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Worm.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AllegroTools.h" />
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="Dispatcher.h" />
-    <ClInclude Include="Drawer.h" />
-    <ClInclude Include="EventGenerator.h" />
-    <ClInclude Include="EventHandling.h" />
-    <ClInclude Include="GameSettings.h" />
-    <ClInclude Include="Observer.h" />
-    <ClInclude Include="Packager.h" />
-    <ClInclude Include="Scenario.h" />
-    <ClInclude Include="Sender.h" />
-    <ClInclude Include="Server.h" />
-    <ClInclude Include="Subject.h" />
-    <ClInclude Include="DrawingInfo.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="Worm.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Scenario.png" />
-    <Image Include="stars.png" />
-    <Image Include="wjump-F1.png" />
-    <Image Include="wjump-F10.png" />
-    <Image Include="wjump-F2.png" />
-    <Image Include="wjump-F3.png" />
-    <Image Include="wjump-F4.png" />
-    <Image Include="wjump-F5.png" />
-    <Image Include="wjump-F6.png" />
-    <Image Include="wjump-F7.png" />
-    <Image Include="wjump-F8.png" />
-    <Image Include="wjump-F9.png" />
-    <Image Include="wwalk-F1.png" />
-    <Image Include="wwalk-F10.png" />
-    <Image Include="wwalk-F11.png" />
-    <Image Include="wwalk-F12.png" />
-    <Image Include="wwalk-F13.png" />
-    <Image Include="wwalk-F14.png" />
-    <Image Include="wwalk-F15.png" />
-    <Image Include="wwalk-F2.png" />
-    <Image Include="wwalk-F3.png" />
-    <Image Include="wwalk-F4.png" />
-    <Image Include="wwalk-F5.png" />
-    <Image Include="wwalk-F6.png" />
-    <Image Include="wwalk-F7.png" />
-    <Image Include="wwalk-F8.png" />
-    <Image Include="wwalk-F9.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\boost.1.66.0.0\build\native\boost.targets" Condition="Exists('..\packages\boost.1.66.0.0\build\native\boost.targets')" />
-    <Import Project="..\packages\AllegroDeps.1.7.0.0\build\native\AllegroDeps.targets" Condition="Exists('..\packages\AllegroDeps.1.7.0.0\build\native\AllegroDeps.targets')" />
-    <Import Project="..\packages\Allegro.5.2.4.0\build\native\Allegro.targets" Condition="Exists('..\packages\Allegro.5.2.4.0\build\native\Allegro.targets')" />
   </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\boost.1.66.0.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.66.0.0\build\native\boost.targets'))" />
-    <Error Condition="!Exists('..\packages\AllegroDeps.1.7.0.0\build\native\AllegroDeps.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AllegroDeps.1.7.0.0\build\native\AllegroDeps.targets'))" />
-    <Error Condition="!Exists('..\packages\Allegro.5.2.4.0\build\native\Allegro.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Allegro.5.2.4.0\build\native\Allegro.targets'))" />
-  </Target>
 </Project>

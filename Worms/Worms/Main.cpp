@@ -1,4 +1,50 @@
+#include "Scenario.h"
+#include "AllegroTools.h"
+#include "Dispatcher.h"
+#include "EventGenerator.h"
+#include "GameSettings.h"
+#include "Drawer.h"
+#include "Sender.h"
 
+//Buscar "&0" en solucion para ver lo que falta hacer
+//Falta: Todo lo de networking, desde mandar paquetes hasta armarlos hasta ver que hacer con el evento quit, o crear worm nuevo a partir de una coneccion.
+int main(void) {
+
+	EventGenerator EventGenerator;
+	AllegroTools AllegroTools;
+	Dispatcher Dispatcher;
+	Event Event = {0,0};
+
+	Scenario Scene;
+	Drawer Drawer;
+	Sender Sender;
+
+	Scene.registerObserver(&Drawer);
+	Scene.registerObserver(&Sender);
+
+	Scene.createNewWorm(0, {gameSettings::LeftWall + 200 , gameSettings::GroundLevel}, WormDirection::Right);
+
+	if (AllegroTools.Init()) {
+
+		AllegroTools.drawingInfo.LoadWormImages();
+		AllegroTools.drawingInfo.arrangeWormCycle();
+
+		while (Event.type != QUIT) {
+
+			EventGenerator.checkIncomingEvents(&AllegroTools, nullptr);
+
+			if (!(EventGenerator.eventQueue.empty())) {
+
+				Event = EventGenerator.fetchEvent();
+
+				if (Event.type != NOEVENT)
+
+					Dispatcher.Dispatch(Event, &Scene, &AllegroTools);
+			}
+		}
+	}
+	return 0;
+}
 
 
 

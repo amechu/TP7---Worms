@@ -11,16 +11,23 @@ Contiene metodos para registrar y desregistrar observadores, ademas de la funcio
 a todos los observadores registrados.
 */
 
+struct lastAction {
+	unsigned int id;
+	unsigned int origin;
+};
+
 class Subject
 {
 public:
 	Subject();
 	virtual ~Subject();
-	virtual void update();
 	virtual void registerObserver(Observer* observer);
 	virtual void unregisterObserver(Observers index);
+	lastAction getLastAction();
 
 protected:
 	std::vector<Observer*> observerList;
+	virtual void notify(void* tool);
+	lastAction lastAction;
 };
 

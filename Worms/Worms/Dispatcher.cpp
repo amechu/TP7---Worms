@@ -1,5 +1,6 @@
 #include "Dispatcher.h"
 #include "AllegroTools.h"
+#include <iostream>
 
 
 Dispatcher::Dispatcher()
@@ -31,17 +32,19 @@ void Dispatcher::Dispatch(Event Event, Scenario* Scene, AllegroTools* allegroToo
 			break;
 		}
 		case REFRESHRIGHT: {
-			Scene->moveRight(Event, allegroTools);
-			Scene->Refresh(allegroTools);
+			Scene->setWormState(Event, WormState::Walking);
+			Scene->directWorm(Event, WormDirection::Right);
+			Scene->Refresh(allegroTools, false);
 			break;
 		}
 		case REFRESHLEFT: {
-			Scene->moveLeft(Event, allegroTools);
-			Scene->Refresh(allegroTools);
+			Scene->setWormState(Event, WormState::Walking);
+			Scene->directWorm(Event, WormDirection::Left);
+			Scene->Refresh(allegroTools, false);
 			break;
 		}
 		case REFRESH: {
-			Scene->Refresh(allegroTools);
+			Scene->Refresh(allegroTools, true);
 			break;
 		}
 		case QUIT: {

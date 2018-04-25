@@ -29,12 +29,15 @@ public:
 	Point getPosition();
 	WormState getState();
 	WormDirection getDirection();
+	void setDirection(WormDirection dir);
+	void setState(WormState state);
+	
 
 	void toggle();
 	void moveLeft(bool callFromRefresh); //Si la llamada a funcion fue llamada por refresh o por evento &0
 	void moveRight(bool callFromRefresh);//ya que si la tecla esta presionada cada entrada a esta funcion sera por evento
 	void jump();						//y para continuar el ciclo de caminata es necesario una invocacion a esta funcion (move)
-	void refresh();						//por evento. (Mirar event generator y funciones de move de Scene)
+	void refresh(bool callFromRefresh);						//por evento. (Mirar event generator y funciones de move de Scene)
 
 private:
 	long unsigned int id;

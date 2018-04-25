@@ -38,18 +38,12 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 		else if (allegroEvent.type == ALLEGRO_EVENT_TIMER) {
 			Timer.stop();
 			if (activeTimer[gameSettings::Left] == true && Timer.getTime() >= 100) {
-				if (!sentMove) {
 					Event.type = REFRESHLEFT;
 					Event.id = 0;
-					sentMove = true;
-				}
 			}
 			else if (activeTimer[gameSettings::Right] == true && Timer.getTime() >= 100) {
-				if (!sentMove) {
 					Event.type = REFRESHRIGHT;
 					Event.id = 0;
-					sentMove = true;
-				}
 			}
 			else {
 				Event.type = REFRESH;

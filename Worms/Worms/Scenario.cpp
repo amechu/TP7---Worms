@@ -77,11 +77,30 @@ void Scenario::Toggle(Event event, AllegroTools* allegroTools)
 	this->notify(allegroTools);
 }
 
-void Scenario::Refresh(AllegroTools* allegroTools)
+void Scenario::Refresh(AllegroTools* allegroTools, bool callFromRefresh)
 {
 	for (Worm& worm : this->Worms) {
-		worm.refresh();
+		worm.refresh(callFromRefresh);
 	}
 	this->lastAction.id = REFRESH;
 	this->notify(allegroTools);
+}
+
+void Scenario::directWorm(Event event, WormDirection dir)
+{
+	for (Worm& worm : Worms) {
+		if (worm.getId() == event.id) {
+			worm.setDirection(dir);
+		}
+	}
+}
+
+void Scenario::setWormState(Event event, WormState state)
+{
+
+	for (Worm& worm : Worms) {
+		if (worm.getId() == event.id) {
+			worm.setState(state);
+		}
+	}
 }

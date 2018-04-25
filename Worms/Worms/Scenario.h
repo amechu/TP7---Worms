@@ -20,7 +20,9 @@ public:
 	void moveRight(Event event, AllegroTools* allegroTools);
 	void Jump(Event event, AllegroTools* allegroTools);
 	void Toggle(Event event, AllegroTools* allegroTools);
-	void Refresh(AllegroTools* allegroTools);
+	void Refresh(AllegroTools* allegroTools, bool callFromRefresh);
+	void directWorm(Event event, WormDirection dir);
+	void setWormState(Event event, WormState state);
 
 	std::vector<Worm> getWormList();
 

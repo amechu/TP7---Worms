@@ -35,7 +35,7 @@ void Drawer::update(void* subject, void * drawingTool)
 				break;
 			}
 			case WormState::Walking: {
-				al_draw_bitmap(((AllegroTools*)drawingTool)->drawingInfo.Wormcycle[worm.getTickCount()], Position.X, Position.Y, (Direction == WormDirection::Left ? NULL : ALLEGRO_FLIP_HORIZONTAL));
+				al_draw_bitmap(((AllegroTools*)drawingTool)->drawingInfo.Wormcycle[worm.getTickCount()-1], Position.X, Position.Y, (Direction == WormDirection::Left ? NULL : ALLEGRO_FLIP_HORIZONTAL));
 				break;
 			}
 			case WormState::Jumping: {

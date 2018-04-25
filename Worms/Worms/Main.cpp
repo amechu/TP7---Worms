@@ -8,6 +8,8 @@
 
 //Buscar "&0" en solucion para ver lo que falta hacer
 //Falta: Todo lo de networking, desde mandar paquetes hasta armarlos hasta ver que hacer con el evento quit, o crear worm nuevo a partir de una coneccion.
+//Problemas: Hay que arreglar toggle porque literalmente togglea, y si mantenes apretado una tecla camina mas rapido, y hay que ponerle un bloqueador
+//a jump para que no se pueda caminar mientras se salta, eso es facil.
 int main(void) {
 
 	EventGenerator EventGenerator;

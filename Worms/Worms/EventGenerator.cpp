@@ -1,6 +1,8 @@
 #include "EventGenerator.h"
 #include "GameSettings.h"
 
+#define WALKDURATION 1000
+#define TIMEFIX 200
 
 EventGenerator::EventGenerator()
 {
@@ -26,7 +28,7 @@ Event EventGenerator::fetchEvent()
 Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 {
 	ALLEGRO_EVENT allegroEvent;
-	Event Event = { 0,0 };
+	Event Event = { NOEVENT , 0 };
 
 	if (al_get_next_event(allegroTools->Queue, &allegroEvent)) {
 
@@ -38,54 +40,89 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 		else if (allegroEvent.type == ALLEGRO_EVENT_TIMER) {
 			Timer.stop();
 			if (activeTimer[gameSettings::Left] == true && Timer.getTime() >= 100) {
+				if (Timer.getTime() >= (firstMove ? WALKDURATION + TIMEFIX : WALKDURATION)) {
+					Timer.start();
+					sentMove = false;
+					firstMove = false;
+				}
+				else {
+					Event.type = REFRESH;
+				}
+				if (!sentMove) {
 					Event.type = REFRESHLEFT;
-					Event.id = 0;
+					sentMove = true;
+				}
+				else {
+					Event.type = REFRESH;
+				}
 			}
 			else if (activeTimer[gameSettings::Right] == true && Timer.getTime() >= 100) {
+				if (Timer.getTime() >= (firstMove? WALKDURATION + TIMEFIX : WALKDURATION)) {
+					Timer.start();
+					sentMove = false;
+					firstMove = false;
+				}
+				else {
+					Event.type = REFRESH;
+				}
+				if (!sentMove) {
 					Event.type = REFRESHRIGHT;
-					Event.id = 0;
+					sentMove = true;
+				}
+				else {
+					Event.type = REFRESH;
+				}
 			}
 			else {
+				if (activeTimer[gameSettings::Jump] == true && Timer.getTime() >= 640) {
+					activeTimer[gameSettings::Jump] = false;
+				}
 				Event.type = REFRESH;
-				Event.id = 0;
 			}
 		}
 
 		else if (allegroEvent.type == ALLEGRO_EVENT_KEY_DOWN) {
-			if (allegroEvent.keyboard.keycode == gameSettings::wormKeySet[gameSettings::Left]) { //&0 no funca esto, no toma la tecla presionada.
-				if (activeTimer[gameSettings::Left] == false && activeTimer[gameSettings::Right] == false) {
+			if (allegroEvent.keyboard.keycode == gameSettings::wormKeySet[gameSettings::Left]) {
+				if (activeTimer[gameSettings::Left] == false && activeTimer[gameSettings::Right] == false && activeTimer[gameSettings::Jump] == false) {
 					activeTimer[gameSettings::Left] = true;
 					Timer.start();
 				}
 			}
 			if (allegroEvent.keyboard.keycode == gameSettings::wormKeySet[gameSettings::Right]) {
-				if (activeTimer[gameSettings::Left] == false && activeTimer[gameSettings::Right] == false) {
+				if (activeTimer[gameSettings::Left] == false && activeTimer[gameSettings::Right] == false && activeTimer[gameSettings::Jump] == false) {
 					activeTimer[gameSettings::Right] = true;
 					Timer.start();
 				}
 			}
 			if (allegroEvent.keyboard.keycode == gameSettings::wormKeySet[gameSettings::Jump]) {
-				Event.type = JUMP;
-				Event.id = 0;
+				if (activeTimer[gameSettings::Left] == false && activeTimer[gameSettings::Right] == false) {
+					activeTimer[gameSettings::Jump] = true;
+					Event.type = JUMP;
+					Timer.start();
+				}
 			}
 		}
 
 		else if (allegroEvent.type == ALLEGRO_EVENT_KEY_UP) {
 			if (allegroEvent.keyboard.keycode == gameSettings::wormKeySet[gameSettings::Left]) {
-				if (Timer.getTime() < 100) {
-					Event.type = TOGGLE;
-					Event.id = 0;
+				if (activeTimer[gameSettings::Left] == true) {
+					if (Timer.getTime() < 100) {
+						Event.type = TOGGLELEFT;
+					}
 				}
-				activeTimer[gameSettings::Left] = false;
-				sentMove = false;
+					activeTimer[gameSettings::Left] = false;
+					sentMove = false;
+					firstMove = true;
 			}
 			if (allegroEvent.keyboard.keycode == gameSettings::wormKeySet[gameSettings::Right]) {
-				if (Timer.getTime() < 100) {
-					Event.type = TOGGLE;
-					Event.id = 0;
+				if (activeTimer[gameSettings::Right] == true) {
+					if (Timer.getTime() < 100) {
+						Event.type = TOGGLERIGHT;
+					}
 				}
-				activeTimer[gameSettings::Right] = false;
-				sentMove = false;
+					activeTimer[gameSettings::Right] = false;
+					sentMove = false;
+					firstMove = true;
 			}
 			if (allegroEvent.keyboard.keycode == gameSettings::wormKeySet[gameSettings::Jump]) {
 				//Nothing to do here
@@ -94,7 +131,6 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 	}
 	else {
 		Event.type = NOEVENT;
-		Event.id = 0;
 	}
 
 	return Event;

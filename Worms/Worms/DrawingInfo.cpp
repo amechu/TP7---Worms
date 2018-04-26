@@ -43,35 +43,37 @@ void DrawingInfo::LoadWormImages() {
 
 void DrawingInfo::arrangeWormCycle()
 {
+	//No se usa la posicion 0
+	//Confirmacion
+	for (int i = 1; i <= 5; i++) {
+		this->Wormcycle[i] = this->WormWalk[0];
+	}
 	//Warmup
-	for (int i = 0; i < 3; i++) {
-		this->Wormcycle[i] = this->WormWalk[i];
+	for (int i = 6; i <= 8; i++) {
+		this->Wormcycle[i] = this->WormWalk[i-6];
 	}
 	//Primera fase
-	for (int i = 3; i < 11; i++) {
-		this->Wormcycle[i] = this->WormWalk[i];
+	for (int i = 9; i <= 16; i++) {
+		this->Wormcycle[i] = this->WormWalk[i-6];
 	}
-	this->Wormcycle[11] = this->WormWalk[10];
-	for (int i = 12; i < 16; i++) {
-		this->Wormcycle[i] = this->WormWalk[i-1];
+	for (int i = 16; i <= 20; i++) {
+		this->Wormcycle[i+1] = this->WormWalk[i-6];
 	}
-	this->Wormcycle[16] = this->WormWalk[3];
+	this->Wormcycle[22] = this->WormWalk[3];
 	//Segunda fase
-	for (int i = 17; i < 25; i++) {
-		this->Wormcycle[i] = this->WormWalk[i-14];
+	for (int i = 9; i <= 16; i++) {
+		this->Wormcycle[i+1+13] = this->WormWalk[i - 6];
 	}
-	this->Wormcycle[24] = this->WormWalk[10];
-	for (int i = 25; i < 30; i++) {
-		this->Wormcycle[i] = this->WormWalk[i - 15];
+	for (int i = 16; i <= 20; i++) {
+		this->Wormcycle[i+1+13+1] = this->WormWalk[i - 6];
 	}
-	this->Wormcycle[30] = this->WormWalk[3];
+	this->Wormcycle[22+1+13] = this->WormWalk[3];
 	//Tercera fase
-	for (int i = 31; i < 39; i++) {
-		this->Wormcycle[i] = this->WormWalk[i-28];
+	for (int i = 9; i <= 16; i++) {
+		this->Wormcycle[i+1+13+1+13] = this->WormWalk[i - 6];
 	}
-	this->Wormcycle[39] = this->WormWalk[10];
-	for (int i = 40; i < 44; i++) {
-		this->Wormcycle[i] = this->WormWalk[i - 29];
+	for (int i = 16; i <= 20; i++) {
+		this->Wormcycle[i+1+13+1+13+1] = this->WormWalk[i - 6];
 	}
-	this->Wormcycle[44] = this->WormWalk[3];
+	this->Wormcycle[22+1+13+1+13] = this->WormWalk[3];
 }

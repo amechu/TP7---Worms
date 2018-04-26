@@ -58,46 +58,44 @@ void Worm::toggle()
 	}
 }
 
-void Worm::moveLeft(bool callFromRefresh)
+void Worm::moveLeft()
 {
-	if (this->State == WormState::Iddle || this->State == WormState::Walking) {
-		this->Direction = WormDirection::Left;
-		this->State = WormState::Walking;
-			if (this->Position.X >= gameSettings::LeftWall) {
-				if (tickCount == 16 || tickCount == 31 || tickCount == 44) {
-					this->Position.X -= gameSettings::WalkVelocity;
-				}
-			}
-			this->tickCount++;
-			if (this->tickCount == 44 && callFromRefresh == false) {
-				this->tickCount = 1;
-			}
-			if (this->tickCount > 45) {
-				tickCount = 0;
-				this->State = WormState::Iddle;
-			}
+	this->State = WormState::Walking;
+	this->Direction = WormDirection::Left;
+
+	this->tickCount++;
+
+	if (this->Position.X >= gameSettings::LeftWall) {
+		if (tickCount == 22 || tickCount == 22 + 14 || tickCount == 22 + 14 + 14) {
+			this->Position.X -= gameSettings::WalkVelocity;
+		}
 	}
+
+	if (this->tickCount > 50) {
+		tickCount = 5;
+		this->State = WormState::Iddle;
+	}
+	
 }
 
-void Worm::moveRight(bool callFromRefresh)
+void Worm::moveRight()
 {
-	if (this->State == WormState::Iddle || this->State == WormState::Walking) {
-		this->Direction = WormDirection::Right;
-			this->State = WormState::Walking;
-			if (this->Position.X <= gameSettings::RightWall) {
-				if (tickCount == 16 || tickCount == 31 || tickCount == 44) {
-					this->Position.X += gameSettings::WalkVelocity;
-				}
-			}
-			this->tickCount++;
-			if (this->tickCount == 44 && callFromRefresh == false) {
-				this->tickCount = 1;
-			}
-			if (this->tickCount > 45) {
-				tickCount = 0;
-				this->State = WormState::Iddle;
-			}
+	this->State = WormState::Walking;
+	this->Direction = WormDirection::Right;
+
+	this->tickCount++;
+
+	if (this->Position.X <= gameSettings::RightWall) {
+		if (tickCount == 22 || tickCount == 22+14 || tickCount == 22+14+14) {
+			this->Position.X += gameSettings::WalkVelocity;
 		}
+	}
+
+	if (this->tickCount > 50) {
+		tickCount = 5;
+		this->State = WormState::Iddle;
+	}
+
 }
 
 void Worm::jump()
@@ -145,7 +143,7 @@ void Worm::jump()
 	}
 }
 
-void Worm::refresh(bool callFromRefresh)
+void Worm::refresh()
 {
 	switch (this->State) {
 		case WormState::Iddle: {
@@ -158,11 +156,11 @@ void Worm::refresh(bool callFromRefresh)
 		case WormState::Walking: {
 			switch (this->Direction) {
 				case WormDirection::Left: {
-					moveLeft(REFRESH_DRIVEN);
+					moveLeft();
 					break;
 				}
 				case WormDirection::Right: {
-					moveRight(REFRESH_DRIVEN);
+					moveRight();
 					break;
 				}
 			}

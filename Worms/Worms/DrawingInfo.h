@@ -12,7 +12,7 @@ public:
 	void LoadWormImages();
 	void arrangeWormCycle();
 
-	std::array<ALLEGRO_BITMAP*, 45> Wormcycle;
+	std::array<ALLEGRO_BITMAP*, 51> Wormcycle;
 	std::array<ALLEGRO_BITMAP*, 15> WormWalk; //Worm walk bitmaps
 	std::string str = "wwalk-F";
 	std::string ng = ".png";

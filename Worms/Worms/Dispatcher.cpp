@@ -1,6 +1,5 @@
 #include "Dispatcher.h"
 #include "AllegroTools.h"
-#include <iostream>
 
 
 Dispatcher::Dispatcher()
@@ -14,13 +13,22 @@ Dispatcher::~Dispatcher()
 
 void Dispatcher::Dispatch(Event Event, Scenario* Scene, AllegroTools* allegroTools)
 {
+
 	switch (Event.type) {
 		case JUMP: {
 			Scene->Jump(Event, allegroTools);
 			break;
 		}
 		case TOGGLE: {
-			Scene->Toggle(Event, allegroTools);
+			Scene->Toggle(Event, allegroTools, WormDirection::Left); //direction unused
+			break;
+		}
+		case TOGGLELEFT: {
+			Scene->Toggle(Event, allegroTools, WormDirection::Left);
+			break;
+		}
+		case TOGGLERIGHT: {
+			Scene->Toggle(Event, allegroTools, WormDirection::Right);
 			break;
 		}
 		case RIGHT: {
@@ -32,19 +40,23 @@ void Dispatcher::Dispatch(Event Event, Scenario* Scene, AllegroTools* allegroToo
 			break;
 		}
 		case REFRESHRIGHT: {
-			Scene->setWormState(Event, WormState::Walking);
-			Scene->directWorm(Event, WormDirection::Right);
-			Scene->Refresh(allegroTools, false);
+			if (Scene->getWormState(Event) == WormState::Iddle) {
+				Scene->setWormState(Event, WormState::Walking);
+				Scene->directWorm(Event, WormDirection::Right);
+			}
+			Scene->Refresh(allegroTools);
 			break;
 		}
 		case REFRESHLEFT: {
-			Scene->setWormState(Event, WormState::Walking);
-			Scene->directWorm(Event, WormDirection::Left);
-			Scene->Refresh(allegroTools, false);
+			if (Scene->getWormState(Event) == WormState::Iddle) {
+				Scene->setWormState(Event, WormState::Walking);
+				Scene->directWorm(Event, WormDirection::Left);
+			}
+			Scene->Refresh(allegroTools);
 			break;
 		}
 		case REFRESH: {
-			Scene->Refresh(allegroTools, true);
+			Scene->Refresh(allegroTools);
 			break;
 		}
 		case QUIT: {

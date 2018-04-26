@@ -8,8 +8,8 @@
 
 //Buscar "&0" en solucion para ver lo que falta hacer
 //Falta: Todo lo de networking, desde mandar paquetes hasta armarlos hasta ver que hacer con el evento quit, o crear worm nuevo a partir de una coneccion.
-//Problemas: Hay que arreglar toggle porque literalmente togglea, y si mantenes apretado una tecla camina mas rapido, y hay que ponerle un bloqueador
-//a jump para que no se pueda caminar mientras se salta, eso es facil.
+//Considerar: los eventos en EventHandling.h que son refresh+algo son para el worm local y generados por allegro, los que son solo algo son para todos
+//los demas worms de networking.
 int main(void) {
 
 	EventGenerator EventGenerator;
@@ -25,6 +25,8 @@ int main(void) {
 	Scene.registerObserver(&Sender);
 
 	Scene.createNewWorm(0, {gameSettings::LeftWall + 200 , gameSettings::GroundLevel}, WormDirection::Right);
+
+	//AGREGAR WORMS POR CADA MAQUINA QUE SE CONECTE
 
 	if (AllegroTools.Init()) {
 

@@ -17,13 +17,13 @@ public:
 	Event transformNetworkEvent(void* nose); //Recibe el paquete crudo de network y lo convierte a Event. Pensar si esta funcion esta bien aca. &0
 	void checkIncomingEvents(AllegroTools* allegroTools, void* nose);
 
-
-public:
-	bool activeEvents[gameSettings::TotalActions] = { 0 };
-	bool activeTimer[gameSettings::TotalActions - 1] = { 0 }; //No es necesario un timer para jump
 	std::queue<Event> eventQueue;
+
+
+private:
+	bool activeTimer[gameSettings::TotalActions] = { 0 }; 
 	Timer Timer;
-	bool isTimerActive = false;
 	bool sentMove = false;
+	bool firstMove = true;
 };
 

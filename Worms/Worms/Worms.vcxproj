@@ -132,6 +132,7 @@
     <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="EventGenerator.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Network.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Packager.cpp" />
     <ClCompile Include="Scenario.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="EventGenerator.h" />
     <ClInclude Include="EventHandling.h" />
     <ClInclude Include="GameSettings.h" />
+    <ClInclude Include="Network.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Packager.h" />
     <ClInclude Include="Scenario.h" />

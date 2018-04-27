@@ -12,6 +12,8 @@
 //los demas worms de networking.
 int main(void) {
 
+	bool iAmHost;
+
 	EventGenerator EventGenerator;
 	AllegroTools AllegroTools;
 	Dispatcher Dispatcher;
@@ -26,7 +28,7 @@ int main(void) {
 
 	Scene.createNewWorm(0, {gameSettings::LeftWall + 200 , gameSettings::GroundLevel}, WormDirection::Right);
 
-	//AGREGAR WORMS POR CADA MAQUINA QUE SE CONECTE
+	iAmHost = AllegroTools.askIfHost(); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
 
 	if (AllegroTools.Init()) {
 

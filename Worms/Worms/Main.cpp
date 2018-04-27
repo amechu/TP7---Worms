@@ -5,6 +5,7 @@
 #include "GameSettings.h"
 #include "Drawer.h"
 #include "Sender.h"
+#include "Network.h"
 
 //Buscar "&0" en solucion para ver lo que falta hacer
 //Falta: Todo lo de networking, desde mandar paquetes hasta armarlos hasta ver que hacer con el evento quit, o crear worm nuevo a partir de una coneccion.
@@ -14,6 +15,7 @@ int main(void) {
 
 	bool iAmHost;
 
+	Network Network;
 	EventGenerator EventGenerator;
 	AllegroTools AllegroTools;
 	Dispatcher Dispatcher;
@@ -28,7 +30,19 @@ int main(void) {
 
 	Scene.createNewWorm(0, {gameSettings::LeftWall + 200 , gameSettings::GroundLevel}, WormDirection::Right);
 
+	Network.netData.loadOwnIP();
+	Network.netData.loadOtherIP();
+
 	iAmHost = AllegroTools.askIfHost(); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
+
+	if (Network.netData.getIfHost()) {
+		AllegroTools.drawWaitingToConnect(); //Pone pantalla que dice que estas esperando a que alguien se te conecte. &0
+		Network.Server->listen();
+	}
+	else {
+		AllegroTools.drawTryingToConnect();
+		Network.Client->connect(Network.netData.getOtherIP(), gameSettings::port);
+	}
 
 	if (AllegroTools.Init()) {
 

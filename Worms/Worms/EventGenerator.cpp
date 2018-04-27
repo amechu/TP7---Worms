@@ -138,7 +138,7 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 Event EventGenerator::transformNetworkEvent(void * nose)
 {
 	Event event;
-	event.type = NOEVENT;
+	event.type = NOEVENT; //&0 mati
 
 	return event;
 }
@@ -146,6 +146,6 @@ Event EventGenerator::transformNetworkEvent(void * nose)
 void EventGenerator::checkIncomingEvents(AllegroTools * allegroTools, void * nose)
 {
 	pushEvent(transformAllegroEvent(allegroTools));
-	//pushEvent(transformNetworkEvent(nose));
+	pushEvent(transformNetworkEvent(nose)); //&0 mati
 }
 

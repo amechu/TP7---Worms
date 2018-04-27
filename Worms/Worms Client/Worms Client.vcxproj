@@ -115,6 +115,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\NetworkTP6\Communication.cpp" />
+    <ClCompile Include="..\NetworkTP6\netData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\NetworkTP6\Communication.h" />
+    <ClInclude Include="..\NetworkTP6\netData.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\NetworkTP6\DireccionesIP.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

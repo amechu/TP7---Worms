@@ -19,9 +19,6 @@
     <Filter Include="Source Files\Subjects">
       <UniqueIdentifier>{0f7ae641-dbd0-4252-8a1c-69a94938ca36}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Observers">
-      <UniqueIdentifier>{c12611b7-7bb6-4bca-82d3-552a693dc969}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Subjects">
       <UniqueIdentifier>{57fb00bd-9bcb-44a2-b4e9-75acc49947da}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,9 @@
     </Filter>
     <Filter Include="Header Files\Misc">
       <UniqueIdentifier>{ce183d84-c6e8-459e-9c76-8db72f922b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Observers">
+      <UniqueIdentifier>{c12611b7-7bb6-4bca-82d3-552a693dc969}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +102,9 @@
     <ClCompile Include="Network.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
+    <ClCompile Include="netData.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Observer.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files\Misc</Filter>
     </ClInclude>
     <ClInclude Include="Network.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="netData.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>

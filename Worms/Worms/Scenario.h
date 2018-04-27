@@ -31,6 +31,7 @@ public:
 
 private:
 	//Por herencia, notify();
+	//Por herencia, lastAction;
 	std::vector<Worm> Worms;
 	unsigned int wormCount = 0;
 };

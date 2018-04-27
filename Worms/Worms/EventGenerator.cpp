@@ -34,7 +34,6 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 
 		if (allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			Event.type = QUIT;
-			Event.id = 0;
 		}
 
 		else if (allegroEvent.type == ALLEGRO_EVENT_TIMER) {

@@ -1,5 +1,6 @@
 #include "Server.h"
 
+/*
 Server::Server(std::string port)
 {
 	this->IO_handler = new boost::asio::io_service();
@@ -26,7 +27,7 @@ void Server::listen()
 std::string Server::getInfoTimed(int limitInMs)
 {	
 	Timer timer;
-	char buffer[1 /*DEBUG, pensar tamano de paquete*/];
+	char buffer[1 /*DEBUG, pensar tamano de paquete];
 	size_t lenght = 0;
 	boost::system::error_code error;
 
@@ -67,7 +68,7 @@ bool Server::sendInfoTimed(std::string msg, int limitInMs)
 
 	do {
 
-		lenght = this->clientSocket->write_some(boost::asio::buffer(msg, msg.size()), error);
+	//	lenght = this->clientSocket->write_some(boost::asio::buffer(msg, msg.size()), error);
 		timer.stop();
 
 		if (timer.getTime() > limitInMs && lenght == 0) //Si se excede del limite de tiempo y no mando nada. (si length no es cero, todavia manda cosas)
@@ -77,3 +78,4 @@ bool Server::sendInfoTimed(std::string msg, int limitInMs)
 
 	return !timeout;
 }
+*/

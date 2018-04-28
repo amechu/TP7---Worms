@@ -15,22 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\NetworkTP6\Communication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\NetworkTP6\netData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\NetworkTP6\Communication.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\NetworkTP6\netData.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="..\NetworkTP6\DireccionesIP.txt">
       <Filter>Source Files</Filter>
     </Text>

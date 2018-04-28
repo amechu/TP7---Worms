@@ -6,15 +6,15 @@
 #include "Drawer.h"
 #include "Sender.h"
 #include "Network.h"
+#include "Parser.h"
 
 //Buscar "&0" en solucion para ver lo que falta hacer
 //Falta: Todo lo de networking, desde mandar paquetes hasta armarlos hasta ver que hacer con el evento quit, o crear worm nuevo a partir de una coneccion.
 //Considerar: los eventos en EventHandling.h que son refresh+algo son para el worm local y generados por allegro, los que son solo algo son para todos
 //los demas worms de networking.
-int main(void) {
+int main(int argc, char* argv[]) {
 
-	bool iAmHost;
-
+	Parser Parser;
 	Network Network;
 	EventGenerator EventGenerator;
 	AllegroTools AllegroTools;
@@ -28,27 +28,29 @@ int main(void) {
 	Scene.registerObserver(&Drawer);
 	Scene.registerObserver(&Sender);
 
-	Scene.createNewWorm(0, {gameSettings::LeftWall + 200 , gameSettings::GroundLevel}, WormDirection::Right);
+	Parser.Read(argc, argv);
 
-	Network.netData.loadOwnIP();
+	Network.netData.loadOwnIP(Parser);
 	Network.netData.loadOtherIP();
-
-	iAmHost = AllegroTools.askIfHost(); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
-
-	if (Network.netData.getIfHost()) {
-		AllegroTools.drawWaitingToConnect(); //Pone pantalla que dice que estas esperando a que alguien se te conecte. &0
-		Network.Server->listen();
-	}
-	else {
-		AllegroTools.drawTryingToConnect();
-		Network.Client->connect(Network.netData.getOtherIP(), gameSettings::port);
-	}
 
 	if (AllegroTools.Init()) {
 
 		AllegroTools.drawingInfo.LoadWormImages();
 		AllegroTools.drawingInfo.arrangeWormCycle();
 
+		Network.netData.setIfHost(AllegroTools.askIfHost()); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
+
+		Scene.createNewWorm(0, { gameSettings::LeftWall + 200 , gameSettings::GroundLevel }, WormDirection::Right);
+
+	/*	if (Network.netData.getIfHost()) {
+			AllegroTools.drawWaitingToConnect(); //Pone pantalla que dice que estas esperando a que alguien se te conecte. &0
+			Network.Server->listen();
+		}
+		else {
+			AllegroTools.drawTryingToConnect();
+			Network.Client->connect(Network.netData.getOtherIP(), gameSettings::port);
+		}
+	*/
 		while (Event.type != QUIT) {
 
 			EventGenerator.checkIncomingEvents(&AllegroTools, nullptr);

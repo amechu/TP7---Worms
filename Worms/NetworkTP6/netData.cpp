@@ -1,3 +1,4 @@
+#include "..\Worms\netData.h"
 #include "netData.h"
 
 void netData::loadIPs() {
@@ -12,6 +13,11 @@ void netData::loadIPs() {
 		this->IPList.push_back(auxString); //... Y la ponemos al final del vector de strings.
 	}
 
+}
+
+std::string netData::loadOwnIP(Parser& Parser)
+{
+	
 }
 
 //-----------------SETTERS-------------------//

@@ -1,5 +1,6 @@
 #include "Client.h"
 
+/*
 Client::Client()
 {
 	this->IOHandler = new boost::asio::io_service();
@@ -50,7 +51,7 @@ bool Client::sendMessage(std::string msg, int limitInMs)
 std::string Client::getInfoTimed(int limitInMs)
 {
 	Timer timer;
-	char buffer[1 /*&0, pensar tamano de paquete, cambiar para que funque con client y no server*/];
+	char buffer[1 /*&0, pensar tamano de paquete, cambiar para que funque con client y no server];
 	size_t lenght = 0;
 	boost::system::error_code error;
 
@@ -60,7 +61,7 @@ std::string Client::getInfoTimed(int limitInMs)
 
 	do {
 
-		lenght = this->serverSocket->read_some(boost::asio::buffer(buffer), error);
+	//	lenght = this->serverSocket->read_some(boost::asio::buffer(buffer), error);
 		timer.stop();
 
 		if (timer.getTime() > limitInMs && lenght == 0) { // Pido que lenght == 0 asi no lo paro mientras esta mandando
@@ -79,3 +80,4 @@ std::string Client::getInfoTimed(int limitInMs)
 
 	return retValue;
 }
+*/

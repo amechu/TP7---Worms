@@ -1,5 +1,5 @@
 #pragma once
-
+/*
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/chrono.hpp>
@@ -22,3 +22,4 @@ private:
 	boost::asio::ip::tcp::resolver::iterator endpoint;
 	const std::string TIMEOUT = "timeout";
 };
+*/

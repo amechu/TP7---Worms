@@ -10,7 +10,7 @@ public:
 	Network();
 	~Network();
 	netData netData;
-	Client * Client;
-	Server * Server;
+	//Client * Client;
+	//Server * Server;
 };
 

@@ -40,28 +40,33 @@ int main(int argc, char* argv[]) {
 
 		Network.netData.setIfHost(AllegroTools.askIfHost()); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
 
-		Scene.createNewWorm(0, { gameSettings::LeftWall + 200 , gameSettings::GroundLevel }, WormDirection::Right);
+		if (Network.netData.getIfHost() != QUITTER) {
 
-	/*	if (Network.netData.getIfHost()) {
+			Scene.createNewWorm(0, { gameSettings::LeftWall + 200 , gameSettings::GroundLevel }, WormDirection::Right);
+
+			/*	if (Network.netData.getIfHost() == HOST) {
 			AllegroTools.drawWaitingToConnect(); //Pone pantalla que dice que estas esperando a que alguien se te conecte. &0
 			Network.Server->listen();
-		}
-		else {
+			}
+			else {
 			AllegroTools.drawTryingToConnect();
 			Network.Client->connect(Network.netData.getOtherIP(), gameSettings::port);
-		}
-	*/
-		while (Event.type != QUIT) {
+			}
+			*/
+			while (Event.type != QUIT) {
 
-			EventGenerator.checkIncomingEvents(&AllegroTools, nullptr);
+				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 
-			if (!(EventGenerator.eventQueue.empty())) {
+				if (!(EventGenerator.eventQueue.empty())) {
 
-				Event = EventGenerator.fetchEvent();
+					Event = EventGenerator.fetchEvent();
 
-				if (Event.type != NOEVENT)
+					if (Event.type != NOEVENT)
 
-					Dispatcher.Dispatch(Event, &Scene, &AllegroTools);
+						for (int i = 0; i < 2; i++) {
+							Dispatcher.Dispatch(Event, &Scene, &AllegroTools);
+						}
+				}
 			}
 		}
 	}

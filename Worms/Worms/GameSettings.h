@@ -4,6 +4,7 @@
 
 namespace gameSettings {
 
+	const enum { NONE, HOST, CLIENT, QUITTER };
 	const enum { Jump, Left, Right, TotalActions };
 	const int wormKeySet[TotalActions] = { ALLEGRO_KEY_W, ALLEGRO_KEY_A, ALLEGRO_KEY_D }; //Local worm keys (in allegro key format)
 	const int GroundLevel = 616;	//Ground level for worms

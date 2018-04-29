@@ -135,17 +135,21 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 	return Event;
 }
 
-Event EventGenerator::transformNetworkEvent(void * nose)
+Event EventGenerator::transformNetworkEvent(Network* Network)
 {
-	Event event;
-	event.type = NOEVENT; //&0 mati
+	Event event = { NOEVENT, 1 };
+	Packet Packet;
+	Packet = Network->fetchRecieved();
+	
+
 
 	return event;
 }
 
-void EventGenerator::checkIncomingEvents(AllegroTools * allegroTools, void * nose)
+void EventGenerator::checkIncomingEvents(AllegroTools * allegroTools, Network * Network)
 {
+	//Network->networkProtocol();
 	pushEvent(transformAllegroEvent(allegroTools));
-	//pushEvent(transformNetworkEvent(nose)); //&0 mati
+	//pushEvent(transformNetworkEvent(Network));
 }
 

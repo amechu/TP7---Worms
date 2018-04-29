@@ -14,18 +14,18 @@ public:
 
 		//------Setters------//
 		void setOwnIP(unsigned int i);
-		void setIfHost(bool imhost);
+		void setIfHost(int imhost);
 
 		//------Getters------//
 		std::string getOwnIP(); 
 		std::string getOtherIP(); 
-		bool getIfHost(); //Devuelve el modo actual de la maquina (Cliente o server)
+		int getIfHost(); //Devuelve el modo actual de la maquina (Cliente o server)
 
 private:
 		std::string myIP; //La direccion IP de la computadora actual.
 		std::string OtherIP;
 
-		bool iAmHost;
+		int iAmHost;
 		const std::string IPFILE = "DireccionesIP.txt";
 
 };

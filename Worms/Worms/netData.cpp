@@ -20,7 +20,7 @@ void netData::loadOtherIP() {
 
 //-----------------SETTERS-------------------//
 
-void netData::setIfHost(bool imhost) {
+void netData::setIfHost(int imhost) {
 	this->iAmHost = imhost;
 }
 
@@ -34,7 +34,7 @@ std::string netData::getOtherIP()
 	return this->OtherIP;
 }
 
-bool netData::getIfHost()
+int netData::getIfHost()
 {
 	return this->iAmHost;
 }

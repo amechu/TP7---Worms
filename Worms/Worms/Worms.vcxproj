@@ -77,6 +77,7 @@
     <Allegro_AddonAudio>true</Allegro_AddonAudio>
     <Allegro_AddonAcodec>true</Allegro_AddonAcodec>
     <Allegro_AddonFont>true</Allegro_AddonFont>
+    <Allegro_AddonColor>true</Allegro_AddonColor>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -134,8 +135,10 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="netData.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="NetworkFsm.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Packager.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Scenario.cpp" />
     <ClCompile Include="Sender.cpp" />
@@ -155,8 +158,10 @@
     <ClInclude Include="GameSettings.h" />
     <ClInclude Include="netData.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="NetworkFsm.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Packager.h" />
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Scenario.h" />
     <ClInclude Include="Sender.h" />

@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include <queue>
 #include "GameSettings.h"
+#include "Network.h"
 
 
 class EventGenerator
@@ -14,8 +15,8 @@ public:
 	void pushEvent(Event event);
 	Event fetchEvent();
 	Event transformAllegroEvent(AllegroTools* allegroTools);
-	Event transformNetworkEvent(void* nose); //Recibe el paquete crudo de network y lo convierte a Event. Pensar si esta funcion esta bien aca. &0
-	void checkIncomingEvents(AllegroTools* allegroTools, void* nose);
+	Event transformNetworkEvent(Network* Network); //Recibe el paquete crudo de network y lo convierte a Event. Pensar si esta funcion esta bien aca. &0
+	void checkIncomingEvents(AllegroTools* allegroTools, Network* Network);
 
 	std::queue<Event> eventQueue;
 

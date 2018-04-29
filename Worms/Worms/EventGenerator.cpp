@@ -141,7 +141,7 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 	Packet Packet;
 	Packet = Network->fetchRecieved();
 	
-
+	/*aca traducimos el packete y returneamos el evento*/
 
 	return event;
 }

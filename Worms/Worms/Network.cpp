@@ -13,12 +13,7 @@ Network::~Network()
 
 void Network::networkProtocol()
 {
-	Packet Packet;
-	Packet = networkFsm.listen();
-	if (!toSend.empty()) {
-		Packet = fetchToSend();
-		networkFsm.say(Packet);
-	}
+
 }
 
 Packet Network::fetchToSend()

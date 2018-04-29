@@ -137,7 +137,6 @@
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="NetworkFsm.cpp" />
     <ClCompile Include="Observer.cpp" />
-    <ClCompile Include="Packager.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Scenario.cpp" />
@@ -160,7 +159,6 @@
     <ClInclude Include="Network.h" />
     <ClInclude Include="NetworkFsm.h" />
     <ClInclude Include="Observer.h" />
-    <ClInclude Include="Packager.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Scenario.h" />

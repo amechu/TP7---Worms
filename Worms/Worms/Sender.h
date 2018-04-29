@@ -10,7 +10,6 @@ public:
 	~Sender();
 	void update(void* subject, void* tool); //&0
 	void send(std::string package); //&0
-private:
-	Packager Packager; //pensar si corresponde &0
+
 };
 

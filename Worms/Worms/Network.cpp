@@ -13,6 +13,13 @@ Network::~Network()
 
 void Network::networkProtocol()
 {
+	Packet Packet;
+	Packet = networkFsm.listen(); //corre la fsm hasta que vuelva al estado inicial.
+	pushToRecieved(Packet);
+	if (!toSend.empty()) { //si hay algo para decir, lo manda
+		Packet = fetchToSend();
+		networkFsm.say(Packet);
+	}
 
 }
 

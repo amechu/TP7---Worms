@@ -13,9 +13,8 @@ class Network
 public:
 	Network();
 	~Network();
-	netData netData;
+	netData netData;                  
 	NetworkFsm networkFsm;
-	Packager Packager;
 	//Client * Client;
 	//Server * Server;
 	void networkProtocol();

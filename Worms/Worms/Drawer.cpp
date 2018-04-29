@@ -21,6 +21,7 @@ void Drawer::update(void* subject, void * drawingTool)
 
 
 	al_clear_to_color(al_map_rgb(0, 0, 0));
+	al_draw_bitmap(((AllegroTools*)drawingTool)->drawingInfo.WindowsBackground, 0, 0, NULL);
 	al_draw_bitmap(((AllegroTools*)drawingTool)->drawingInfo.Background, 0, 0, NULL);
 
 	for (Worm& worm : (Scene->getWormList())) {

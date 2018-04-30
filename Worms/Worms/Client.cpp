@@ -1,6 +1,6 @@
 #include "Client.h"
 
-/*
+
 Client::Client()
 {
 	this->IOHandler = new boost::asio::io_service();
@@ -48,6 +48,17 @@ bool Client::sendMessage(std::string msg, int limitInMs)
 
 }
 
+
+void Client::createLineClient(std::string host, std::string port)
+{
+		clientSocket->non_blocking(true);
+
+		endpoint = clientResolver->resolve(boost::asio::ip::tcp::resolver::query(host, port));
+
+		boost::asio::connect(*clientSocket, endpoint);
+}
+
+/*
 std::string Client::getInfoTimed(int limitInMs)
 {
 	Timer timer;

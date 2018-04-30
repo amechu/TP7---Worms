@@ -42,6 +42,8 @@ int main(int argc, char* argv[]) {
 
 		if (Network.netData.getIfHost() != QUITTER) {
 
+			
+
 			Scene.createNewWorm(0, { gameSettings::LeftWall + 200 , gameSettings::GroundLevel }, WormDirection::Right);
 
 			/*	if (Network.netData.getIfHost() == HOST) {
@@ -54,6 +56,12 @@ int main(int argc, char* argv[]) {
 			}
 			*/
 			while (Event.type != QUIT) {
+
+				if (Network.netData.getIfHost() == HOST)
+					Network.Server->createLineServer();
+
+				else
+					Network.Client->createLineClient(Network.netData.getOwnIP(), gameSettings::port);
 
 				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 

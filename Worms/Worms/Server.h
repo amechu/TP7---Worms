@@ -1,9 +1,8 @@
 #pragma once
-/*
+
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/chrono.hpp>
-#include <boost/timer/timer.hpp>
 #include "Timer.h"
 
 class Server
@@ -14,6 +13,7 @@ public:
 	void listen(); //funcion no bloqueante que ve si algun cliente se quiere conectar
 	std::string getInfoTimed(int limitInMs); //funcion que recibe un paquete
 	bool sendInfoTimed(std::string msg, int limitInMs); //funcion que manda un paquete.
+	void createLineServer();
 
 
 private:
@@ -22,4 +22,3 @@ private:
 	boost::asio::ip::tcp::acceptor* serverAcceptor;
 	const std::string TIMEOUT = "timeout";
 };
-*/

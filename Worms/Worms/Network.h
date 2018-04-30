@@ -15,8 +15,8 @@ public:
 	~Network();
 	netData netData;                  
 	NetworkFsm networkFsm;
-	//Client * Client;
-	//Server * Server;
+	Client * Client;
+	Server * Server;
 	void networkProtocol();
 	Packet fetchToSend();
 	Packet fetchRecieved();

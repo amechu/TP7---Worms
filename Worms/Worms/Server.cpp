@@ -1,6 +1,6 @@
 #include "Server.h"
 
-/*
+
 Server::Server(std::string port)
 {
 	this->IO_handler = new boost::asio::io_service();
@@ -24,6 +24,15 @@ void Server::listen()
 	this->serverAcceptor->accept(*(this->serverSocket));
 }
 
+
+void Server::createLineServer()
+{
+	serverSocket->non_blocking(true);
+
+	serverAcceptor->accept(*serverSocket);
+}
+
+/*
 std::string Server::getInfoTimed(int limitInMs)
 {	
 	Timer timer;

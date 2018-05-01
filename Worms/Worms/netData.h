@@ -13,7 +13,7 @@ public:
 		void loadOtherIP();//Se fija cual de las dos ips en el .txt no es la que me pasaron por parser y la devuelvo. &0
 
 		//------Setters------//
-		void setOwnIP(unsigned int i);
+	
 		void setIfHost(int imhost);
 
 		//------Getters------//

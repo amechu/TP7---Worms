@@ -1,9 +1,10 @@
 #include "Network.h"
 
 
-
-Network::Network()
+Network::Network(Client * cli, Server * ser)
 {
+	this->cli = cli;
+	this->ser = ser;
 }
 
 

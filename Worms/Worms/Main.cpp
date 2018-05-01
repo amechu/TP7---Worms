@@ -15,11 +15,16 @@
 int main(int argc, char* argv[]) {
 
 	Parser Parser;
-	Network Network;
+
+	Client client;
+	Server server(gameSettings::port);
+	Network Network(&client, &server);
+
 	EventGenerator EventGenerator;
-	AllegroTools AllegroTools;
 	Dispatcher Dispatcher;
-	Event Event = {0,0};
+	Event Event = { 0,0 };
+
+	AllegroTools AllegroTools;
 
 	Scenario Scene;
 	Drawer Drawer;
@@ -58,10 +63,10 @@ int main(int argc, char* argv[]) {
 			while (Event.type != QUIT) {
 
 				if (Network.netData.getIfHost() == HOST)
-					Network.Server->createLineServer();
+					server.createLineServer();
 
 				else
-					Network.Client->createLineClient(Network.netData.getOwnIP(), gameSettings::port);
+					client.createLineClient(Network.netData.getOwnIP(), gameSettings::port);
 
 				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 

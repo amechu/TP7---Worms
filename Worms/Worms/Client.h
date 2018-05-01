@@ -12,7 +12,7 @@ public:
 	~Client();
 	void connect(std::string host, std::string port);
 	bool sendMessage(std::string msg, int limitInMs); //funcion que manda un paquete.
-	std::string getInfoTimed(int limitInMs); //funcion que recibe un paquete
+	//std::string getInfoTimed(int limitInMs); //funcion que recibe un paquete
 	void createLineClient(std::string host, std::string port);
 
 private:

@@ -137,13 +137,47 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 
 Event EventGenerator::transformNetworkEvent(Network* Network)
 {
-	Event event = { NOEVENT, 1 };
+	Event Event = { NOEVENT, 1 }; // lo puse en mausculas pq hace lio con otro event de windows
 	Packet Packet;
 	Packet = Network->fetchRecieved();
-	
-	/*aca traducimos el packete y returneamos el evento*/
 
-	return event;
+	if ((Packet.header == MOVE) && (Packet.action == (gameSettings::Left)))
+	{
+		Event.type = LEFT;
+	}
+	else if((Packet.header == MOVE) && (Packet.action == (gameSettings::Right)))
+	{
+		Event.type = RIGHT;
+	}
+	else if ((Packet.header == MOVE) && (Packet.action == (gameSettings::Jump)))
+	{
+		Event.type = JUMP;
+	}
+	else if ((Packet.header == MOVE) && ((Packet.action == (gameSettings::Toggle))))
+	{
+		Event.type = TOGGLE;
+	}
+	else if ((Packet.header == ACK) && (Packet.id == 0)) // caso del primer i'm ready
+	{
+		Event.type = NEWWORM; //ME LLEGO EL ACK QUE ENTENDIO CREO EL WORM
+	}
+	else if ((Packet.header == ACK) && (Packet.id != 0))//caso ack de los demas
+	{
+		Event.type = SPEAK;		//provisional
+	}
+	else if ((Packet.header == I_AM_READY))	//validar posicion??
+	{
+		Event.type = HEAR;
+	}
+	else if ((Packet.header == ERRORNET))	//LO TIRE DE ONDA PERO HAY QUE CORREGIRLO ESTE ES POR LOS TIMERS
+	{
+		// no se si poner LOS timer aca para ver si me llegan otros
+	}
+	else if ((Packet.header == QUITPACKET))
+	{
+		Event.type = QUIT;
+	}
+	return Event;
 }
 
 void EventGenerator::checkIncomingEvents(AllegroTools * allegroTools, Network * Network)

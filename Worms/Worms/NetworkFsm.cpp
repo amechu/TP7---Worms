@@ -41,9 +41,23 @@ void quitAnswer(void* data)
 {
 
 }
-void sendAck(void* data)
+void sendAck(void * data)	//VERSIONES BASICAS DESPUES VER COMO METER EN EL DISPATCHER
 {
+	using namespace gameSettings;
 
+	/*
+
+	std::string message;
+
+	if ((events.Event) == ACKS)
+	{
+		packet.header = ACK;
+		packet.id = 1;	//pq tengo que mandar a externo y no se si va la ip o no
+		message=packet.makePacket();
+		//agregar funcion que envia el paquete 
+	}
+	*/
+	
 }
 void doStuff(void* data)
 {
@@ -91,3 +105,4 @@ int NetworkFsm::getState()
 {
 	return estado;
 }
+

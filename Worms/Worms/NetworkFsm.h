@@ -37,7 +37,7 @@ void waitMoveConfirm(void* data);
 
 void quitAnswer(void* data);
 
-void sendAck(void* data);
+	void sendAck(void* data);
 
 void doStuff(void* data);
 
@@ -54,13 +54,18 @@ public:
 	NetworkFsm();
 	~NetworkFsm();
 	void say(Packet Packet);
-	Packet listen();
+	Packet listen(); // creo que se lo puede sacar VER
+	Packet packet;
 	void run(int ev, void * data);	// el ev es el que llega del dispatcher y el data es la estructura donde se encuentran el evento anterior y el de ahora
 	int getLastEvent();		//obtengo el ultimo evento que se ejecuto como para tener memoria de como hacerlo
 	int getEvent();			//obtengo el evento que se va a ejecutar
 	int getState();
 	void setLastEvent(int lastev);
 	void setEvent(int ev);
+
+
+	//funciones que ejecutar cuando ocurre un evento//
+
 
 
 private:

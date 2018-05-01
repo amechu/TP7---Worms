@@ -2,7 +2,7 @@
 #include "Packet.h"
 
 
-enum networkEvent{ SEND_READY, RECIEVE_READY, ACK, SEND_MOVE_REQUEST, RECEIVED_MOVE_REQUEST, NET_ERROR, RECEIVED_QUIT_REQUEST, SEND_QUIT_REQUEST, TIMEOUT1, TIMEOUT2 };
+enum networkEvent{ SEND_READY, RECIEVE_READY, ACKS, SEND_MOVE_REQUEST, RECEIVED_MOVE_REQUEST, NET_ERROR, RECEIVED_QUIT_REQUEST, SEND_QUIT_REQUEST, TIMEOUT1, TIMEOUT2 };
 
 enum networkState { READYTOCONNECT, WAIT_REQUEST, WAIT_ACK, SHUTDOWN };
 
@@ -20,6 +20,12 @@ typedef struct
 }cell;
 
 
+
+typedef struct 
+{
+	int LastEvent;
+	int Event;
+}data_t;
 
 //funciones que le corresponden a cada evento de la maquina de estados
 
@@ -49,6 +55,13 @@ public:
 	~NetworkFsm();
 	void say(Packet Packet);
 	Packet listen();
+	void run(int ev, void * data);	// el ev es el que llega del dispatcher y el data es la estructura donde se encuentran el evento anterior y el de ahora
+	int getLastEvent();		//obtengo el ultimo evento que se ejecuto como para tener memoria de como hacerlo
+	int getEvent();			//obtengo el evento que se va a ejecutar
+
+	void setLastEvent(int lastev);
+	void setEvent(int ev);
+
 
 private:
 
@@ -60,6 +73,5 @@ private:
 		{ /*SHUTDOWN*/		{SHUTDOWN,&doNothing},				{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}						,{SHUTDOWN,&errorComunication} },
 	};
 	int estado;
-
+	data_t events;
 };
-

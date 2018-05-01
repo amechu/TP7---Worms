@@ -11,7 +11,7 @@ Packet::~Packet()
 {
 }
 using namespace gameSettings;
-std::string Packet::makePacket()
+std::string Packet::makePacket(int8_t type, int16_t action , int32_t id , int16_t pos )
 {
 	std::string string;
 

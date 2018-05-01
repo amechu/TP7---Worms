@@ -17,5 +17,5 @@ namespace gameSettings {
 	const float FPS = 50.0;			//Frames per second AKA gamespeed
 	const float SCREEN_W = 1920;	//Screen width
 	const float SCREEN_H = 696;		//Screen height
-	const std::string port = "12345";
+	const std::string port = "15667";
 }

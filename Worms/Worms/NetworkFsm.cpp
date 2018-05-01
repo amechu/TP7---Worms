@@ -1,5 +1,7 @@
 #include "NetworkFsm.h"
 
+using namespace std;
+
 NetworkFsm::NetworkFsm()
 {
 	estado = READYTOCONNECT;		//seteo siempre para despues mandarle el i'm ready
@@ -59,9 +61,12 @@ void sendAck(void * data)	//VERSIONES BASICAS DESPUES VER COMO METER EN EL DISPA
 	*/
 	
 }
-void doStuff(void* data)
+void AckRecieved(void* data)
 {
-
+	
+	//std::cout << "ACK recieved and matched the ID. Leaving FSM" << std::endl;
+	data_t * p = (data_t*)data;
+	p->leave = true;
 }
 void reSend(void* data)
 {

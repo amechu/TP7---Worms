@@ -1,15 +1,26 @@
 #include "Network.h"
 
 
-Network::Network(Client * cli, Server * ser)
+Network::Network(netData * net, std::string port)
 {
-	this->cli = cli;
-	this->ser = ser;
+	IO_handler = new boost::asio::io_service();
+	socket = new boost::asio::ip::tcp::socket(*IO_handler);
+	acceptor = new boost::asio::ip::tcp::acceptor(*IO_handler,
+	boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), std::stoi(port)));
+	resolver = new boost::asio::ip::tcp::resolver(*IO_handler);
+
+	this->net = net;
 }
 
 
 Network::~Network()
 {
+	acceptor->close();
+	socket->close();
+	delete resolver;
+	delete acceptor;
+	delete socket;
+	delete IO_handler;
 }
 
 void Network::networkProtocol()
@@ -46,4 +57,29 @@ void Network::pushToSend(Packet packet)
 void Network::pushToRecieved(Packet packet)
 {
 	Recieved.push(packet);
+}
+
+void Network::createLineServer()
+{
+	socket->non_blocking(true);
+
+	acceptor->accept(*socket);
+}
+
+void Network::createLineClient(std::string host, std::string port)
+{
+	try {
+
+		socket->non_blocking(true);
+
+		endpoint = resolver->resolve(boost::asio::ip::tcp::resolver::query(host, port));
+
+		boost::asio::connect(*socket, endpoint);
+
+	}
+	catch (std::exception & e) 
+	{
+		std::cout << "Error al intentar conectar" << std::endl;
+		net->setIfHost(gameSettings::QUITTER);
+	}
 }

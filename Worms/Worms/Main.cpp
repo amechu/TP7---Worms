@@ -16,9 +16,8 @@ int main(int argc, char* argv[]) {
 
 	Parser Parser;
 
-	Client client;
-	Server server(gameSettings::port);
-	Network Network(&client, &server);
+	netData data;
+	Network Network(&data, gameSettings::port);
 
 	EventGenerator EventGenerator;
 	Dispatcher Dispatcher;
@@ -35,19 +34,18 @@ int main(int argc, char* argv[]) {
 
 	Parser.Read(argc, argv);
 
-	Network.netData.loadOwnIP(Parser);
-	Network.netData.loadOtherIP();
+	data.loadOwnIP(Parser);
+	data.loadOtherIP();
 
 	if (AllegroTools.Init()) {
 
 		AllegroTools.drawingInfo.LoadWormImages();
 		AllegroTools.drawingInfo.arrangeWormCycle();
 
-		Network.netData.setIfHost(AllegroTools.askIfHost()); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
+		data.setIfHost(AllegroTools.askIfHost()); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
 
-		if (Network.netData.getIfHost() != QUITTER) {
-
-			
+		if (data.getIfHost() != QUITTER) 
+		{
 
 			Scene.createNewWorm(0, { gameSettings::LeftWall + 200 , gameSettings::GroundLevel }, WormDirection::Right);
 
@@ -60,13 +58,17 @@ int main(int argc, char* argv[]) {
 			Network.Client->connect(Network.netData.getOtherIP(), gameSettings::port);
 			}
 			*/
+
+			if (data.getIfHost() == HOST)
+			{
+				Network.createLineServer();
+			}
+			else
+			{
+				Network.createLineClient(data.getOwnIP(), gameSettings::port);
+			}
+
 			while (Event.type != QUIT) {
-
-				if (Network.netData.getIfHost() == HOST)
-					server.createLineServer();
-
-				else
-					client.createLineClient(Network.netData.getOwnIP(), gameSettings::port);
 
 				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 

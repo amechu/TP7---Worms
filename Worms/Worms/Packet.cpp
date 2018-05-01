@@ -17,7 +17,7 @@ std::string Packet::makePacket()
 
 	switch (header) {
 	case QUITPACKET:
-	case ERROR:
+	case ERRORNET:
 		string = header;
 		break;
 	case I_AM_READY:

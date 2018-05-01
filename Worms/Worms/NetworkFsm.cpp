@@ -86,3 +86,8 @@ void NetworkFsm::setLastEvent(int lastev)
 {
 	events.LastEvent = lastev;
 }
+
+int NetworkFsm::getState()
+{
+	return estado;
+}

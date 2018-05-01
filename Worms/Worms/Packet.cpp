@@ -22,8 +22,7 @@ std::string Packet::makePacket()
 		break;
 	case I_AM_READY:
 		string = header;
-		string += (posToBigEndian(pos));	//creo que deberia ir id aca ya que esto es antes de todo
-											//pero tambien puede servir para mandar la posicion del 
+		string += (posToBigEndian(pos));	
 		break;
 	case ACK:
 		string = header;

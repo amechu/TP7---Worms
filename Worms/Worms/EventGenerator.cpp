@@ -141,21 +141,24 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 	Packet Packet;
 	Packet = Network->fetchRecieved();
 
-	if ((Packet.header == MOVE) && (Packet.action == (gameSettings::Left)))
+	if (Packet.header == MOVE )
 	{
-		Event.type = LEFT;
-	}
-	else if((Packet.header == MOVE) && (Packet.action == (gameSettings::Right)))
-	{
-		Event.type = RIGHT;
-	}
-	else if ((Packet.header == MOVE) && (Packet.action == (gameSettings::Jump)))
-	{
-		Event.type = JUMP;
-	}
-	else if ((Packet.header == MOVE) && ((Packet.action == (gameSettings::Toggle))))
-	{
-		Event.type = TOGGLE;
+		if (Packet.action == (gameSettings::Left))
+		{
+			Event.type = LEFT;
+		}
+		else if (Packet.action == (gameSettings::Right))
+		{
+			Event.type = RIGHT;
+		}
+		else if (Packet.action == (gameSettings::Jump))
+		{
+			Event.type = JUMP;
+		}
+		else if (Packet.action == (gameSettings::Toggle))
+		{
+			Event.type = TOGGLE;
+		}
 	}
 	else if ((Packet.header == ACK) && (Packet.id == 0)) // caso del primer i'm ready
 	{
@@ -176,6 +179,10 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 	else if ((Packet.header == QUITPACKET))
 	{
 		Event.type = QUIT;
+	}
+	else
+	{
+		Event.type = NOEVENT;
 	}
 	return Event;
 }

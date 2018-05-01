@@ -189,8 +189,8 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 
 void EventGenerator::checkIncomingEvents(AllegroTools * allegroTools, Network * Network)
 {
-	//Network->networkProtocol();
+	Network->networkProtocol();
 	pushEvent(transformAllegroEvent(allegroTools));
-	//pushEvent(transformNetworkEvent(Network));
+	pushEvent(transformNetworkEvent(Network));
 }
 

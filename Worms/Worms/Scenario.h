@@ -23,6 +23,7 @@ public:
 	void Refresh(AllegroTools* allegroTools);
 	void directWorm(Event event, WormDirection dir);
 	void setWormState(Event event, WormState state);
+	Worm& getWorm(int id);
 	WormState getWormState(Event event);
 
 	std::vector<Worm> getWormList();

@@ -17,19 +17,21 @@ std::string Packet::makePacket(int8_t header, int16_t action , int32_t id , int1
 
 	switch (header) {
 	case QUITPACKET:
+		string = QUIT_;
+		break;
 	case ERRORNET:
-		string = header;
+		string = ERROR_;
 		break;
 	case I_AM_READY:
-		string = header;
+		string = IAMRDY;
 		string += (posToBigEndian(pos));	
 		break;
 	case ACK:
-		string = header;
+		string = ACK_;
 		string += (idToBigEndian(id));
 		break;
 	case MOVE:
-		string = header;
+		string = MOVE_;
 		string += action;
 		string += (idToBigEndian(id));
 		break;

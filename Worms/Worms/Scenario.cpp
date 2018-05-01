@@ -139,3 +139,8 @@ WormState Scenario::getWormState(Event event)
 	return state;
 }
 
+Worm& Scenario::getWorm(int id)
+{
+	Worm& worm = Worms.at(id);
+	return worm;
+}

@@ -8,7 +8,8 @@ enum class WormState
 	Iddle, Walking, Jumping
 };
 
-enum class WormDirection {
+enum class WormDirection 
+{
 	Left, Right
 };
 
@@ -29,6 +30,7 @@ public:
 	Point getPosition();
 	WormState getState();
 	WormDirection getDirection();
+	double getPositionX();
 	void setDirection(WormDirection dir);
 	void setState(WormState state);
 	

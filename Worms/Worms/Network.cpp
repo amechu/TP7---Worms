@@ -24,7 +24,7 @@ Network::~Network()
 void Network::networkProtocol()
 {
 	Packet Packet;
-	Packet = networkFsm.listen(); //corre la fsm hasta que vuelva al estado inicial.
+	//Packet = networkFsm.listen(); //corre la fsm hasta que vuelva al estado inicial.
 	pushToRecieved(Packet);
 	if (!toSend.empty()) { //si hay algo para decir, lo manda
 		Packet = fetchToSend();
@@ -68,12 +68,12 @@ void Network::createLineClient(std::string host, std::string port)
 {
 	try {
 
-		socket->non_blocking(true);
 
 		endpoint = resolver->resolve(boost::asio::ip::tcp::resolver::query(host, port));
 
 		boost::asio::connect(*socket, endpoint);
 
+		socket->non_blocking(true);
 	}
 	catch (std::exception & e) 
 	{

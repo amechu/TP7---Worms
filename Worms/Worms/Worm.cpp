@@ -167,3 +167,9 @@ void Worm::refresh()
 		}
 	}
 }
+
+
+double Worm::getPositionX()
+{
+	return Position.X;
+}

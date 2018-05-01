@@ -69,7 +69,24 @@ int main(int argc, char* argv[]) {
 				Network.createLineClient(data.getOwnIP(), gameSettings::port);
 			}
 
-			while (Event.type != QUIT) {
+			/*
+			if (data.getIfHost() == HOST)
+			{
+				Network.getInfoTimed(100);
+			}
+			else
+			{
+				std::string msg;
+				Packet pckg;
+				msg = pckg.makePacket(IAMRDY, 0, 0, Scene.getWorm(0).getPositionX());
+
+				Network.sendInfoTimed(msg, 100);
+			}
+			*/
+
+
+			while (Event.type != QUIT && (data.getIfHost() != gameSettings::QUITTER))
+			{
 
 				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 

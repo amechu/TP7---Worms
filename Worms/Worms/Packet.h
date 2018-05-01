@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Worm.h"
 #include <stdint.h>
 #include <string>
 #include "GameSettings.h"

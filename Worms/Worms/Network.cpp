@@ -5,9 +5,7 @@ Network::Network(netData * net, std::string port)
 {
 	IO_handler = new boost::asio::io_service();
 	socket = new boost::asio::ip::tcp::socket(*IO_handler);
-	acceptor = new boost::asio::ip::tcp::acceptor(*IO_handler,
-	boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), std::stoi(port)));
-	resolver = new boost::asio::ip::tcp::resolver(*IO_handler);
+	
 
 	this->net = net;
 }
@@ -61,9 +59,9 @@ void Network::pushToRecieved(Packet packet)
 
 void Network::createLineServer()
 {
-	socket->non_blocking(true);
-
 	acceptor->accept(*socket);
+
+	socket->non_blocking(true);
 }
 
 void Network::createLineClient(std::string host, std::string port)
@@ -81,5 +79,77 @@ void Network::createLineClient(std::string host, std::string port)
 	{
 		std::cout << "Error al intentar conectar" << std::endl;
 		net->setIfHost(gameSettings::QUITTER);
+	}
+}
+
+std::string Network::getInfoTimed(int limitInMs)
+{
+	Timer timer;
+	char buffer[1 /*DEBUG, pensar tamano de paquete*/];
+	size_t lenght = 0;
+	boost::system::error_code error;
+
+	timer.start();
+
+	bool timeout = false;
+
+	do 
+	{
+
+		lenght = this->socket->read_some(boost::asio::buffer(buffer), error);
+		timer.stop();
+
+		if (timer.getTime() > limitInMs && lenght == 0) 
+		{														// Pido que lenght == 0 asi no lo paro mientras esta mandando
+			timeout = true;
+		}
+
+	} while (error && !timeout);
+
+	std::string retValue;
+
+	if (!timeout) 
+	{
+		buffer[lenght] = 0;
+		retValue = buffer;
+	}
+	else
+		retValue = TIMEOUT;
+
+	return retValue;
+}
+
+bool Network::sendInfoTimed(std::string msg, int limitInMs)
+{																//&0 hacer  que funque con server y no client
+	Timer timer;
+	size_t lenght = 0;
+	boost::system::error_code error;
+	bool timeout = false;
+
+	timer.start();
+
+	do 
+	{
+													 //	lenght = this->clientSocket->write_some(boost::asio::buffer(msg, msg.size()), error);
+		timer.stop();
+
+		if (timer.getTime() > limitInMs && lenght == 0) //Si se excede del limite de tiempo y no mando nada. (si length no es cero, todavia manda cosas)
+			timeout = true;
+
+	} while (error && !timeout);
+
+	return !timeout;
+}
+
+void Network::acceptOrResolve(std::string port)
+{
+	if (net->getIfHost() == gameSettings::HOST)
+	{
+		acceptor = new boost::asio::ip::tcp::acceptor(*IO_handler,
+			boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), std::stoi(port)));
+	}
+	else
+	{
+		resolver = new boost::asio::ip::tcp::resolver(*IO_handler);
 	}
 }

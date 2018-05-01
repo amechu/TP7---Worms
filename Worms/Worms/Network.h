@@ -7,6 +7,7 @@
 #include "Packet.h"
 #include "NetworkFsm.h"
 #include "Packager.h"
+#include "GameSettings.h"
 #include <string>
 #include <boost/asio.hpp>
 #include <boost/chrono.hpp>
@@ -23,12 +24,15 @@ public:
 	void networkProtocol();
 	Packet fetchToSend();
 	Packet fetchRecieved();
-
 	void pushToSend(Packet);
 	void pushToRecieved(Packet);
 
+	void acceptOrResolve(std::string port);
 	void createLineServer();
 	void createLineClient(std::string host, std::string port);
+
+	bool sendInfoTimed(std::string msg, int limitInMs);
+	std::string getInfoTimed(int limitInMs);
 
 private:
 
@@ -42,5 +46,7 @@ private:
 
 	std::queue<Packet> toSend;
 	std::queue<Packet> Recieved;
+
+	const std::string TIMEOUT = "timeout";
 };
 

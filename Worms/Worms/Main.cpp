@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
 		AllegroTools.drawingInfo.arrangeWormCycle();
 
 		data.setIfHost(AllegroTools.askIfHost()); //Bloqueante, pantalla con dos botones, un boton para ser host, uno para client. &0
+		Network.acceptOrResolve(gameSettings::port);
 
 		if (data.getIfHost() != QUITTER) 
 		{

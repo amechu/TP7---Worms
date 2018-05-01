@@ -33,32 +33,29 @@ void waitReadyConfirm(void* data)
 }
 void errorComunication(void* data)
 {
+	//si llega un error corto todo
 
+	data_t*p = (data_t*)data;
+	p->error = true;
+	p->leave = true;
+	p->quitall = true;
 }
 void waitMoveConfirm(void* data)
 {
-
+	//enviar el paquete 
+	//despues esperarlo
 }
 void quitAnswer(void* data)
 {
+//	cout << "closing program" << endl;
+	data_t* p = (data_t*)data;
+	p->leave = true;
+	p->quitall = true;
 
 }
 void sendAck(void * data)	//VERSIONES BASICAS DESPUES VER COMO METER EN EL DISPATCHER
 {
 	using namespace gameSettings;
-
-	/*
-
-	std::string message;
-
-	if ((events.Event) == ACKS)
-	{
-		packet.header = ACK;
-		packet.id = 1;	//pq tengo que mandar a externo y no se si va la ip o no
-		message=packet.makePacket();
-		//agregar funcion que envia el paquete 
-	}
-	*/
 	
 }
 void AckRecieved(void* data)

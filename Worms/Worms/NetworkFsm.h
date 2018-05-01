@@ -28,6 +28,7 @@ typedef struct
 	bool leave;
 	bool error;
 	int timeouts = 0;
+	bool quitall=false;
 
 }data_t;
 
@@ -39,11 +40,11 @@ void errorComunication(void* data);
 
 void waitMoveConfirm(void* data);
 
-void quitAnswer(void* data);
+void quitAnswer(void* data);	//
 
 	void sendAck(void* data);
 
-void AckRecieved(void* data);
+void AckRecieved(void* data); //
 
 void reSend(void* data);
 
@@ -78,7 +79,7 @@ private:
 	{						//SEND_READY						RECIEVE_READY					 ACK							  SEND_MOVE_REQUEST				RECEIVED_MOVE_REQUEST				NET_ERROR				 	   RECEIVED_QUIT_REQUEST			 SEND_QUIT_REQUEST						TIMEOUT									 TIMEOUT2
 		{ /*READYTOCONNECT*/{READYTOCONNECT,&waitReadyConfirm},	{WAIT_REQUEST,&sendAck},		{SHUTDOWN,&errorComunication },	{SHUTDOWN,&errorComunication},	{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication }	,{READYTOCONNECT,&errorComunication }		,{SHUTDOWN,&errorComunication} },
 		{ /*WAIT_REQUEST*/	{SHUTDOWN,&errorComunication},		{SHUTDOWN,&errorComunication},	{SHUTDOWN,&errorComunication},	{WAIT_ACK,&waitMoveConfirm},	{WAIT_REQUEST,&sendAck}			,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&sendAck}			,{WAIT_ACK,&quitAnswer}			,{SHUTDOWN,&errorComunication}				,{SHUTDOWN,&errorComunication} },
-		{ /*WAIT_ACK*/		{SHUTDOWN,&errorComunication},		{SHUTDOWN,&errorComunication},	{WAIT_REQUEST,&AckRecieved },		{SHUTDOWN,&errorComunication} , {SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{WAIT_ACK,&reSend}							,{SHUTDOWN,&errorComunication} },
+		{ /*WAIT_ACK*/		{SHUTDOWN,&errorComunication},		{SHUTDOWN,&errorComunication},	{WAIT_REQUEST,&AckRecieved },	{SHUTDOWN,&errorComunication} , {SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{WAIT_ACK,&reSend}							,{SHUTDOWN,&errorComunication} },
 		{ /*SHUTDOWN*/		{SHUTDOWN,&doNothing},				{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}						,{SHUTDOWN,&errorComunication} },
 	};
 	int estado;

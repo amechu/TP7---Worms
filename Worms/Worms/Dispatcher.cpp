@@ -69,5 +69,10 @@ void Dispatcher::Dispatch(Event Event, Scenario* Scene, AllegroTools* allegroToo
 		case NOEVENT: {
 			break;
 		}
+		case NEWWORM: {
+			Scene->createNewWorm(1, { gameSettings::LeftWall + 300, gameSettings::GroundLevel }, WormDirection::Left);
+			break;
+		}
+
 	}
 }

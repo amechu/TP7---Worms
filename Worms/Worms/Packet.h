@@ -9,8 +9,8 @@
 
 #define ACKR_ (0x00)
 #define ACK_ (0x01)
-#define IAMRDY (0x02)
-#define MOVE_ (0x03)
+#define IAMRDY (0x20)
+#define MOVE_ (0x30)
 #define QUIT_	(0xFF)
 #define ERROR_ (0xE0)
 

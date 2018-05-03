@@ -31,8 +31,10 @@ public:
 	void createLineServer();
 	void createLineClient(std::string host, std::string port);
 
-	bool sendInfoTimed(std::string msg, int limitInMs);
+	void sendInfo(std::string msg);
 	std::string getInfoTimed(int limitInMs);
+
+	netData * net;
 
 private:
 
@@ -41,8 +43,6 @@ private:
 	boost::asio::ip::tcp::resolver* resolver;
 	boost::asio::ip::tcp::resolver::iterator endpoint;
 	boost::asio::ip::tcp::acceptor* acceptor;
-
-	netData * net;
 
 	std::queue<Packet> toSend;
 	std::queue<Packet> Recieved;

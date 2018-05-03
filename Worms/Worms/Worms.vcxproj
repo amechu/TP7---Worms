@@ -226,7 +226,6 @@
     <Import Project="..\packages\boost_date_time-vc141.1.67.0.0\build\boost_date_time-vc141.targets" Condition="Exists('..\packages\boost_date_time-vc141.1.67.0.0\build\boost_date_time-vc141.targets')" />
     <Import Project="..\packages\boost_regex-vc141.1.67.0.0\build\boost_regex-vc141.targets" Condition="Exists('..\packages\boost_regex-vc141.1.67.0.0\build\boost_regex-vc141.targets')" />
     <Import Project="..\packages\boost_system-vc141.1.67.0.0\build\boost_system-vc141.targets" Condition="Exists('..\packages\boost_system-vc141.1.67.0.0\build\boost_system-vc141.targets')" />
-    <Import Project="..\packages\asio-cpp.1.10.2.0\build\native\asio-cpp.targets" Condition="Exists('..\packages\asio-cpp.1.10.2.0\build\native\asio-cpp.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -239,6 +238,5 @@
     <Error Condition="!Exists('..\packages\boost_date_time-vc141.1.67.0.0\build\boost_date_time-vc141.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_date_time-vc141.1.67.0.0\build\boost_date_time-vc141.targets'))" />
     <Error Condition="!Exists('..\packages\boost_regex-vc141.1.67.0.0\build\boost_regex-vc141.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_regex-vc141.1.67.0.0\build\boost_regex-vc141.targets'))" />
     <Error Condition="!Exists('..\packages\boost_system-vc141.1.67.0.0\build\boost_system-vc141.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost_system-vc141.1.67.0.0\build\boost_system-vc141.targets'))" />
-    <Error Condition="!Exists('..\packages\asio-cpp.1.10.2.0\build\native\asio-cpp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\asio-cpp.1.10.2.0\build\native\asio-cpp.targets'))" />
   </Target>
 </Project>

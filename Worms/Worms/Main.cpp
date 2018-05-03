@@ -50,55 +50,31 @@ int main(int argc, char* argv[]) {
 
 			Scene.createNewWorm(0, { gameSettings::LeftWall + 200 , gameSettings::GroundLevel }, WormDirection::Right);
 
-			/*	if (Network.netData.getIfHost() == HOST) {
-			AllegroTools.drawWaitingToConnect(); //Pone pantalla que dice que estas esperando a que alguien se te conecte. &0
-			Network.Server->listen();
-			}
-			else {
-			AllegroTools.drawTryingToConnect();
-			Network.Client->connect(Network.netData.getOtherIP(), gameSettings::port);
-			}
-			*/
-
-			if (data.getIfHost() == HOST)
-			{
+			if (data.getIfHost() == HOST) {
+				//drawwaitingforsomebody()
 				Network.createLineServer();
 			}
-			else
-			{
+			else {
+				//drawtryingtoconnect()
 				Network.createLineClient(data.getOwnIP(), gameSettings::port);
 			}
-
-			/*
-			if (data.getIfHost() == HOST)
-			{
-				Network.getInfoTimed(100);
-			}
-			else
-			{
-				std::string msg;
-				Packet pckg;
-				msg = pckg.makePacket(IAMRDY, 0, 0, Scene.getWorm(0).getPositionX());
-
-				Network.sendInfoTimed(msg, 100);
-			}
-			*/
-
 
 			while (Event.type != QUIT && (data.getIfHost() != gameSettings::QUITTER))
 			{
 
 				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 
-				if (!(EventGenerator.eventQueue.empty())) {
+				for (int i = 0; i < 2; i++) {
 
-					Event = EventGenerator.fetchEvent();
+					if (!(EventGenerator.eventQueue.empty())) {
 
-					if (Event.type != NOEVENT)
+						Event = EventGenerator.fetchEvent();
 
-						for (int i = 0; i < 2; i++) {
+						if (Event.type != NOEVENT)
+
 							Dispatcher.Dispatch(Event, &Scene, &AllegroTools);
-						}
+
+					}
 				}
 			}
 		}

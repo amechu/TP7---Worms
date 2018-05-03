@@ -24,7 +24,7 @@ Network::~Network()
 void Network::networkProtocol()
 {
 	Packet Packet;
-	//Packet = networkFsm.listen(); //corre la fsm hasta que vuelva al estado inicial.
+	Packet = networkFsm.listen(); //corre la fsm hasta que vuelva al estado inicial.
 	pushToRecieved(Packet);
 	if (!toSend.empty()) { //si hay algo para decir, lo manda
 		Packet = fetchToSend();
@@ -60,7 +60,6 @@ void Network::pushToRecieved(Packet packet)
 void Network::createLineServer()
 {
 	acceptor->accept(*socket);
-
 	socket->non_blocking(true);
 }
 
@@ -85,7 +84,7 @@ void Network::createLineClient(std::string host, std::string port)
 std::string Network::getInfoTimed(int limitInMs)
 {
 	Timer timer;
-	char buffer[1 /*DEBUG, pensar tamano de paquete*/];
+	char buffer[6];
 	size_t lenght = 0;
 	boost::system::error_code error;
 
@@ -119,26 +118,17 @@ std::string Network::getInfoTimed(int limitInMs)
 	return retValue;
 }
 
-bool Network::sendInfoTimed(std::string msg, int limitInMs)
+void Network::sendInfo(std::string msg)
 {																//&0 hacer  que funque con server y no client
-	Timer timer;
 	size_t lenght = 0;
 	boost::system::error_code error;
-	bool timeout = false;
 
-	timer.start();
+	do {
 
-	do 
-	{
-													 //	lenght = this->clientSocket->write_some(boost::asio::buffer(msg, msg.size()), error);
-		timer.stop();
+		lenght = this->socket->write_some(boost::asio::buffer(msg, msg.size()), error);
 
-		if (timer.getTime() > limitInMs && lenght == 0) //Si se excede del limite de tiempo y no mando nada. (si length no es cero, todavia manda cosas)
-			timeout = true;
+	} while (error);
 
-	} while (error && !timeout);
-
-	return !timeout;
 }
 
 void Network::acceptOrResolve(std::string port)

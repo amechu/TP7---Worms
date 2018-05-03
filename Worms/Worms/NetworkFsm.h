@@ -1,12 +1,14 @@
 #pragma once
 #include "Packet.h"
+#include "Network.h"
+#include "Timer.h"
 
 
 enum networkEvent{ SEND_READY, RECIEVE_READY, ACKS, SEND_MOVE_REQUEST, RECEIVED_MOVE_REQUEST, NET_ERROR, RECEIVED_QUIT_REQUEST, SEND_QUIT_REQUEST, TIMEOUT1, TIMEOUT2 };
 
 enum networkState { READYTOCONNECT, WAIT_REQUEST, WAIT_ACK, SHUTDOWN };
 
-typedef void(*pfun)(void* data);
+typedef void(*pfun)(void* data, Network* network, NetworkFsm* netfsm);
 
 
 #define N_EVENTS 10
@@ -32,26 +34,6 @@ typedef struct
 
 }data_t;
 
-//funciones que le corresponden a cada evento de la maquina de estados
-
-void waitReadyConfirm(void* data);
-
-void errorComunication(void* data);
-
-void waitMoveConfirm(void* data);
-
-void quitAnswer(void* data);	//
-
-	void sendAck(void* data);
-
-void AckRecieved(void* data); //
-
-void reSend(void* data);
-
-void doNothing(void* data);
-
-
-
 
 class NetworkFsm
 {
@@ -59,7 +41,7 @@ public:
 	NetworkFsm();
 	~NetworkFsm();
 	void say(Packet Packet);
-	Packet listen(); // creo que se lo puede sacar VER
+	Packet listen(Network* network); // creo que se lo puede sacar VER
 	Packet packet;
 	void run(int ev, void * data);	// el ev es el que llega del dispatcher y el data es la estructura donde se encuentran el evento anterior y el de ahora
 	int getLastEvent();		//obtengo el ultimo evento que se ejecuto como para tener memoria de como hacerlo
@@ -68,9 +50,7 @@ public:
 	void setLastEvent(int lastev);
 	void setEvent(int ev);
 
-
-	//funciones que ejecutar cuando ocurre un evento//
-
+	data_t events;
 
 
 private:
@@ -83,5 +63,22 @@ private:
 		{ /*SHUTDOWN*/		{SHUTDOWN,&doNothing},				{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}						,{SHUTDOWN,&errorComunication} },
 	};
 	int estado;
-	data_t events;
 };
+
+//funciones que le corresponden a cada evento de la maquina de estados
+
+void waitReadyConfirm(void* data, Network* network, NetworkFsm* netfsm);
+
+void errorComunication(void* data, Network* network);
+
+void waitMoveConfirm(void* data, Network* network);
+
+void quitAnswer(void* data, Network* network);	//
+
+void sendAck(void* data, Network* network);
+
+void AckRecieved(void* data, Network* network); //
+
+void reSend(void* data, Network* network);
+
+void doNothing(void* data, Network* network);

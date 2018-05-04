@@ -23,7 +23,7 @@
     <ProjectGuid>{0278F06A-E41E-4FF0-9C59-4DE3AE5F5820}</ProjectGuid>
     <RootNamespace>Worms</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>Worms Server</ProjectName>
+    <ProjectName>Worms</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -141,20 +141,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AllegroTools.cpp" />
-    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Dispatcher.cpp" />
     <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="EventGenerator.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="netData.cpp" />
     <ClCompile Include="Network.cpp" />
-    <ClCompile Include="NetworkFsm.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Scenario.cpp" />
     <ClCompile Include="Sender.cpp" />
-    <ClCompile Include="Server.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="DrawingInfo.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -162,21 +158,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AllegroTools.h" />
-    <ClInclude Include="Client.h" />
     <ClInclude Include="Dispatcher.h" />
     <ClInclude Include="Drawer.h" />
     <ClInclude Include="EventGenerator.h" />
     <ClInclude Include="EventHandling.h" />
     <ClInclude Include="GameSettings.h" />
-    <ClInclude Include="netData.h" />
     <ClInclude Include="Network.h" />
-    <ClInclude Include="NetworkFsm.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Packet.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Scenario.h" />
     <ClInclude Include="Sender.h" />
-    <ClInclude Include="Server.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="DrawingInfo.h" />
     <ClInclude Include="Timer.h" />

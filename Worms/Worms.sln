@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Worms Server", "Worms\Worms.vcxproj", "{0278F06A-E41E-4FF0-9C59-4DE3AE5F5820}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Worms Client", "Worms Client\Worms Client.vcxproj", "{74A920DA-94A7-43AE-A182-3558A68FBAF2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{0278F06A-E41E-4FF0-9C59-4DE3AE5F5820}.Release|x64.Build.0 = Release|x64
 		{0278F06A-E41E-4FF0-9C59-4DE3AE5F5820}.Release|x86.ActiveCfg = Release|Win32
 		{0278F06A-E41E-4FF0-9C59-4DE3AE5F5820}.Release|x86.Build.0 = Release|Win32
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Debug|x64.ActiveCfg = Debug|x64
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Debug|x64.Build.0 = Debug|x64
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Debug|x86.ActiveCfg = Debug|Win32
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Debug|x86.Build.0 = Debug|Win32
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Release|x64.ActiveCfg = Release|x64
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Release|x64.Build.0 = Release|x64
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Release|x86.ActiveCfg = Release|Win32
-		{74A920DA-94A7-43AE-A182-3558A68FBAF2}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

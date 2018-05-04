@@ -19,28 +19,28 @@ void Sender::update(void * subject, void* tool)
 		case LEFT:
 			Packet.header = MOVE_;
 			Packet.action = ACTIONLEFT;
-			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			Packet.id = (uint32_t)(rand());
 			break;
 		case RIGHT:
 			Packet.header = MOVE_;
 			Packet.action = ACTIONRIGHT;
-			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			Packet.id = (uint32_t)(rand());
 			break;
 		case JUMP:
 			Packet.header = MOVE_;
 			Packet.action = ACTIONJUMP;
-			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			Packet.id = (uint32_t)(rand());
 			break;
 		case TOGGLELEFT:
 		case TOGGLERIGHT:
 			Packet.header = MOVE_;
 			Packet.action = ACTIONTOGGLE;
-			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			Packet.id = (uint32_t)(rand());
 			break;
 		case QUITLOCAL:
 			Packet.header = QUIT_;
 		}
 	}
 
-	network->networkFsm.say(Packet, network);
+	network->say(Packet);
 }

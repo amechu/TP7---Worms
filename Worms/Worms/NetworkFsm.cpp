@@ -12,11 +12,6 @@ NetworkFsm::~NetworkFsm()
 {
 }
 
-void NetworkFsm::say(Packet Packet)
-{
-	/* mandar algo por networking */
-}
-
 Packet NetworkFsm::listen(Network* network)
 {
 	Packet Packet;
@@ -24,121 +19,198 @@ Packet NetworkFsm::listen(Network* network)
 	bool check = false, good = false;
 	int i;
 	
-	if (estado == READYTOCONNECT) {
-		if (network->net->getIfHost()) {
-			network->sendInfo(Packet.makePacket(IAMRDY, 0, 0, gameSettings::LeftWall + 400));
-			run(SEND_READY, &events);
-		}
-		else {
-			while (i < 5 || !check) {
-				string = network->getInfoTimed(20);
-				if (string != "timeout") {
-					check = true;
-					if ((string.c_str())[0] == (char)(0x20)) {
-						good = true;
-						run(RECIEVE_READY, &events);
-					}
-					else {
-						run(NET_ERROR, &events);
-					}
+	do {
+		if (estado == READYTOCONNECT) {
+			if (network->net->getIfHost()) {
+				network->sendInfo(Packet.makePacket(IAMRDY, 0, 0, gameSettings::WormInitialPosition));
+				this->estado = WAIT_READY;
+				Packet = waitReady(network);
+				if (Packet.header == IAMRDY) {
+					run(READY_RECEIVED, &events, network);
 				}
-				else
-					i++;
+				else {
+					run(NET_ERROR, &events, network);
+				}
 			}
-			if (!good) {
-				run(TIMEOUT2, &events);
+			else {
+				Packet = waitReady(network);
+				if (Packet.header == IAMRDY) {
+					run(READY_RECEIVED, &events, network);
+				}
+				else {
+					run(NET_ERROR, &events, network);
+				}
 			}
 		}
-	}
+		else if (estado == WAIT_REQUEST) {
 
-	//hasta aca seria el handshake? hay que ver que este bien.
-	//a partir de aca hay que hacer que la fsm corra (es decir escucharla) y mandar ack (lo haria solo cuando se hace run() con el evento de move) para que vuelva al estado de wait_request.
-	//y capturar y devolver aquel paquete move si es que llega.
+			Packet = waitRequest(network);
 
+		}
+		else if (estado == WAIT_ACK) {
+
+			Packet = waitAck(network);
+
+		}
+	} while (estado != WAIT_REQUEST);
 
 	return Packet;
 }
 
-
-
-
-void waitReadyConfirm(void* data, Network* network, NetworkFsm* netfsm)
+void NetworkFsm::say(Packet packet, Network* network)
 {
-	int i = 0;
+	estado = WAIT_ACK;
+	network->sendInfo(packet.makePacket(packet.header, packet.action, packet.id, packet.pos));
+	if (packet.header == QUIT_) {
+		setEvent(QUIT_REQUEST_RECEIVED);
+	}
+
+}
+
+Packet NetworkFsm::run(int ev, void* data, Network* network)
+{
+	Packet Packet;
+	setLastEvent(events.Event);
+	setEvent(ev);
+	Packet = tabla[estado][ev].action(data, network, this);
+	estado = tabla[estado][ev].nextState;
+	return Packet;
+};
+
+Packet NetworkFsm::waitReady(Network* network) {
+
+	int i = 0, pos = 0;
 	bool check = false, good = false;
-	std::string string;
+	std::string string, aux;
+	Packet Packet;
+	Packet.header = 0;
 
 	while (i < 5 || !check) {
 		string = network->getInfoTimed(20);
 		if (string != "timeout") {
 			check = true;
-			if ((string.c_str())[0] == (char)(0x20)) {
+			if ((string.c_str())[0] == (char)(IAMRDY)) {
 				good = true;
-				netfsm->run(RECIEVE_READY, &(netfsm->events));
+				aux += (string.c_str())[2];
+				aux += (string.c_str())[1];
+				pos = stoi(aux);
+				Packet.header = IAMRDY;
+				Packet.pos = pos;
 			}
 			else {
-				netfsm->run(NET_ERROR, &(netfsm->events));
+				run(NET_ERROR, &events, network);
+				Packet.header = ERROR_;
 			}
 		}
 		else
 			i++;
 	}
 	if (!good) {
-		netfsm->run(TIMEOUT2, &(netfsm->events));
+		run(TIMEOUT2, &events, network);
+		Packet.header = ERROR_;
 	}
+
+	return Packet;
 }
 
-void errorComunication(void* data)
-{
-	//si llega un error corto todo
+Packet NetworkFsm::waitRequest(Network* network) {
 
-	data_t*p = (data_t*)data;
-	p->error = true;
-	p->leave = true;
-	p->quitall = true;
-}
-void waitMoveConfirm(void* data)
-{
-	//enviar el paquete 
-	//despues esperarlo
-}
-void quitAnswer(void* data)
-{
-//	cout << "closing program" << endl;
-	data_t* p = (data_t*)data;
-	p->leave = true;
-	p->quitall = true;
-
-}
-void sendAck(void * data, Network* network, NetworkFsm* netfsm)	//VERSIONES BASICAS DESPUES VER COMO METER EN EL DISPATCHER
-{
+	int i = 0, pos = 0;
+	bool check = false, good = false;
+	std::string string, aux;
 	Packet Packet;
-	network->sendInfo(Packet.makePacket(IAMRDY, 0, 0, gameSettings::LeftWall + 400));
-	netfsm->run(SEND_READY, &(netfsm->events));
-}
-void AckRecieved(void* data)
-{
+	Packet.header = 0;
+
+	while (i < 5 || !check) {
+		string = network->getInfoTimed(20);
+		if (string != "timeout") {
+			check = true;
+			if ((string.c_str())[0] == (char)(MOVE_)) {
+				good = true;
+				aux += (string.c_str())[5];
+				aux += (string.c_str())[4];
+				aux += (string.c_str())[3];
+				aux += (string.c_str())[2];
+				this->packet.header = MOVE_;
+				this->packet.action = (string.c_str())[1];
+				this->packet.id = stoi(aux);
+				run(MOVE_REQUEST_RECEIVED, &events, network);
+				Packet = this->packet;
+			}
+			else if ((string.c_str())[0] == (char)(IAMRDY) || (string.c_str())[0] == (char)(ACK_) || (string.c_str())[0] == (char)(ERROR_) || (string.c_str())[0] == (char)(ACKR_)) {
+				good = true;
+				Packet = run(NET_ERROR, &events, network);
+			}
+			else if ((string.c_str())[0] == (char)(QUIT_)) {
+				Packet = run(QUIT_REQUEST_RECEIVED, &events, network);
+			}
+		}
+		else
+			i++;
+	}
+	if (!good) {
+		Packet.header = 0;
+	}
 	
-	//std::cout << "ACK recieved and matched the ID. Leaving FSM" << std::endl;
-	data_t * p = (data_t*)data;
-	p->leave = true;
-}
-void reSend(void* data)
-{
-
-}
-void doNothing(void* data)
-{
-
+	return Packet;
 }
 
-void NetworkFsm::run(int ev, void* data)
-{
-	(events.LastEvent) = (events.Event);
-	events.Event = ev;
-	tabla[estado][ev].action(data);
-	estado = tabla[estado][ev].nextState;
-};
+Packet NetworkFsm::waitAck(Network* network) {
+
+	int i = 0, pos = 0;
+	bool check = false, good = false;
+	std::string string, aux;
+	Packet Packet;
+	Packet.header = 0;
+
+	while (i < 5 || !check) {
+		string = network->getInfoTimed(20);
+		if (string != "timeout") {
+			check = true;
+			if ((string.c_str())[0] == (char)(ACK_)) {
+				good = true;
+				aux += (string.c_str())[4];
+				aux += (string.c_str())[3];
+				aux += (string.c_str())[2];
+				aux += (string.c_str())[1];
+				if (getEvent() == READY_RECEIVED) {
+					if (!(stoi(aux) == 0)) {
+						run(NET_ERROR, &events, network);
+					}
+					else {
+						Packet.header = ACK_;
+						Packet.id = 0;
+					}
+				}
+				else if (getEvent() == QUIT_REQUEST_RECEIVED) {
+					if (!(stoi(aux) == 0)) {
+						run(NET_ERROR, &events, network);
+					}
+					else {
+						Packet.header = QUIT_;
+						Packet.id = 0;
+					}
+				}
+				else {
+					if (stoi(aux) == this->packet.id) {
+						run(ACK_RECEIVED, &events, network);
+					}
+				}
+			}
+			else {
+				good = true;
+				Packet = run(NET_ERROR, &events, network);
+			}
+		}
+		else
+			i++;
+	}
+	if (!good) {
+		Packet.header = 0;
+	}
+
+	return Packet;
+}
 
 int NetworkFsm::getEvent()
 {
@@ -166,3 +238,55 @@ int NetworkFsm::getState()
 	return estado;
 }
 
+//Callbacks
+
+Packet sendReady(void * data, Network * network, NetworkFsm * netfsm)
+{	
+	Packet Packet;
+	Packet.header = 0;
+	network->sendInfo(Packet.makePacket(IAMRDY, 0, 0, gameSettings::WormInitialPosition + 400));
+	return Packet;
+}
+
+Packet sendAckr(void * data, Network * network, NetworkFsm * netfsm)
+{
+	Packet Packet;
+	Packet.header = 0;
+	network->sendInfo(Packet.makePacket(ACK_, 0, 0, 0));
+	return Packet;
+}
+
+Packet rest(void * data, Network * network, NetworkFsm * netfsm)
+{
+	Packet Packet;
+	Packet.header = 0;
+	return Packet;
+}
+
+Packet errorComm(void * data, Network * network, NetworkFsm * netfsm)
+{
+	Packet Packet;
+	Packet.header = ERROR_;
+	return Packet;
+}
+
+Packet sendAck(void * data, Network * network, NetworkFsm * netfsm)
+{
+	Packet Packet;
+	Packet.header = 0;
+	if (netfsm->getEvent() == MOVE_REQUEST_RECEIVED) {
+		network->sendInfo(Packet.makePacket(ACK_, 0, netfsm->packet.id, 0));
+	}
+	else if (netfsm->getEvent() == QUIT_REQUEST_RECEIVED) {
+		network->sendInfo(Packet.makePacket(ACK_, 0, 0, 0));
+		Packet.header = QUIT_;
+	}
+	return Packet;
+}
+
+Packet reSend(void * data, Network * network, NetworkFsm * netfsm)
+{
+	Packet Packet;
+	Packet.header = 0;
+	return Packet; //pensar
+}

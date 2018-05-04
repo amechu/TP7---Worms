@@ -27,7 +27,9 @@ int main(int argc, char* argv[]) {
 
 	Scenario Scene;
 	Drawer Drawer;
-	Sender Sender;
+	Sender Sender(&Network);
+
+	srand(time(NULL));
 
 	Scene.registerObserver(&Drawer);
 	Scene.registerObserver(&Sender);

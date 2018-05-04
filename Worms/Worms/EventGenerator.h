@@ -17,7 +17,7 @@ public:
 	Event transformAllegroEvent(AllegroTools* allegroTools);
 	Event transformNetworkEvent(Network* Network); //Recibe el paquete crudo de network y lo convierte a Event. Pensar si esta funcion esta bien aca. &0
 	void checkIncomingEvents(AllegroTools* allegroTools, Network* Network);
-
+	int pos;
 	std::queue<Event> eventQueue;
 
 

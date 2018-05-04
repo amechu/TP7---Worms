@@ -11,6 +11,7 @@ namespace gameSettings {
 	const int GroundLevel = 616;	//Ground level for worms
 	const int LeftWall = 685;		//Left boundary for worms
 	const int RightWall = 1170;		//Right boundary for worms
+	const int WormInitialPosition = LeftWall + 100;
 	const double WalkVelocity = 9;
 	const double Velocity = 4.5;	//Worm velocity
 	const double Gravity = 0.24;	//Worm gravity

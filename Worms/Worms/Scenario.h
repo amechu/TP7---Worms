@@ -21,6 +21,7 @@ public:
 	void Jump(Event event, AllegroTools* allegroTools);
 	void Toggle(Event event, AllegroTools* allegroTools, WormDirection currentdir);
 	void Refresh(AllegroTools* allegroTools);
+	void Quit(AllegroTools* allegroTools);
 	void directWorm(Event event, WormDirection dir);
 	void setWormState(Event event, WormState state);
 	Worm& getWorm(int id);

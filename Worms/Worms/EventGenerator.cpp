@@ -33,7 +33,7 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 	if (al_get_next_event(allegroTools->Queue, &allegroEvent)) {
 
 		if (allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-			Event.type = QUIT;
+			Event.type = QUITLOCAL;
 		}
 
 		else if (allegroEvent.type == ALLEGRO_EVENT_TIMER) {
@@ -141,42 +141,35 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 	Packet Packet;
 	Packet = Network->fetchRecieved();
 
-	if (Packet.header == MOVE )
+	if (Packet.header == MOVE_ )
 	{
-		if (Packet.action == (gameSettings::Left))
+		if (Packet.action == ACTIONLEFT)
 		{
 			Event.type = LEFT;
 		}
-		else if (Packet.action == (gameSettings::Right))
+		else if (Packet.action == ACTIONRIGHT)
 		{
 			Event.type = RIGHT;
 		}
-		else if (Packet.action == (gameSettings::Jump))
+		else if (Packet.action == ACTIONJUMP)
 		{
 			Event.type = JUMP;
 		}
-		else if (Packet.action == (gameSettings::Toggle))
+		else if (Packet.action == ACTIONTOGGLE)
 		{
 			Event.type = TOGGLE;
 		}
 	}
-	else if ((Packet.header == ACK) && (Packet.id == 0)) // caso del primer i'm ready
+	else if ((Packet.header == ACK_) && (Packet.id == 0)) // caso del primer i'm ready
 	{
 		Event.type = NEWWORM; //ME LLEGO EL ACK QUE ENTENDIO CREO EL WORM
+		pos = Packet.pos;
 	}
-	else if ((Packet.header == ACK) && (Packet.id != 0))//caso ack de los demas
+	else if ((Packet.header == ERROR_))
 	{
-		Event.type = SPEAK;		//provisional
+		Event.type = QUIT;
 	}
-	else if ((Packet.header == I_AM_READY))	//validar posicion??
-	{
-		Event.type = HEAR;
-	}
-	else if ((Packet.header == ERRORNET))	//LO TIRE DE ONDA PERO HAY QUE CORREGIRLO ESTE ES POR LOS TIMERS
-	{
-		// no se si poner LOS timer aca para ver si me llegan otros
-	}
-	else if ((Packet.header == QUITPACKET))
+	else if ((Packet.header == QUIT_))
 	{
 		Event.type = QUIT;
 	}

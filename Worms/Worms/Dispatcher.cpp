@@ -59,11 +59,8 @@ void Dispatcher::Dispatch(Event Event, Scenario* Scene, AllegroTools* allegroToo
 			Scene->Refresh(allegroTools);
 			break;
 		}
-		case QUIT: {
-			//Mandar paquete de quit &0
-			//Decir disconnecting.. en pantalla &0
-			//Esperar ACK &0
-			//Cerrar programa &0
+		case QUITLOCAL: {
+			Scene->Quit(allegroTools);
 			break;
 		}
 		case NOEVENT: {

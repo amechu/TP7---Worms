@@ -4,14 +4,14 @@
 #include "Timer.h"
 
 
-enum networkEvent{ SEND_READY, RECIEVE_READY, ACKS, SEND_MOVE_REQUEST, RECEIVED_MOVE_REQUEST, NET_ERROR, RECEIVED_QUIT_REQUEST, SEND_QUIT_REQUEST, TIMEOUT1, TIMEOUT2 };
+enum networkEvent{ READY_RECEIVED, ACK_RECEIVED, MOVE_REQUEST_RECEIVED, NET_ERROR, QUIT_REQUEST_RECEIVED, TIMEOUT1, TIMEOUT2 };
 
-enum networkState { READYTOCONNECT, WAIT_REQUEST, WAIT_ACK, SHUTDOWN };
+enum networkState { READYTOCONNECT, WAIT_READY, WAIT_REQUEST, WAIT_ACK, SHUTDOWN };
 
-typedef void(*pfun)(void* data, Network* network, NetworkFsm* netfsm);
+typedef Packet(*pfun)(void* data, Network* network, NetworkFsm* netfsm);
 
 
-#define N_EVENTS 10
+#define N_EVENTS 7
 #define N_STATES 4
 
 
@@ -40,45 +40,39 @@ class NetworkFsm
 public:
 	NetworkFsm();
 	~NetworkFsm();
-	void say(Packet Packet);
 	Packet listen(Network* network); // creo que se lo puede sacar VER
+	void say(Packet packet, Network* network);
 	Packet packet;
-	void run(int ev, void * data);	// el ev es el que llega del dispatcher y el data es la estructura donde se encuentran el evento anterior y el de ahora
+	Packet run(int ev, void * data, Network* network);	// el ev es el que llega del dispatcher y el data es la estructura donde se encuentran el evento anterior y el de ahora
 	int getLastEvent();		//obtengo el ultimo evento que se ejecuto como para tener memoria de como hacerlo
 	int getEvent();			//obtengo el evento que se va a ejecutar
 	int getState();
 	void setLastEvent(int lastev);
 	void setEvent(int ev);
-
+	Packet waitReady(Network* network);
+	Packet waitRequest(Network* network);
+	Packet waitAck(Network* network);
 	data_t events;
 
 
 private:
 
 	const cell tabla[N_STATES][N_EVENTS] =
-	{						//SEND_READY						RECIEVE_READY					 ACK							  SEND_MOVE_REQUEST				RECEIVED_MOVE_REQUEST				NET_ERROR				 	   RECEIVED_QUIT_REQUEST			 SEND_QUIT_REQUEST						TIMEOUT									 TIMEOUT2
-		{ /*READYTOCONNECT*/{READYTOCONNECT,&waitReadyConfirm},	{WAIT_REQUEST,&sendAck},		{SHUTDOWN,&errorComunication },	{SHUTDOWN,&errorComunication},	{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication }	,{READYTOCONNECT,&errorComunication }		,{SHUTDOWN,&errorComunication} },
-		{ /*WAIT_REQUEST*/	{SHUTDOWN,&errorComunication},		{SHUTDOWN,&errorComunication},	{SHUTDOWN,&errorComunication},	{WAIT_ACK,&waitMoveConfirm},	{WAIT_REQUEST,&sendAck}			,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&sendAck}			,{WAIT_ACK,&quitAnswer}			,{SHUTDOWN,&errorComunication}				,{SHUTDOWN,&errorComunication} },
-		{ /*WAIT_ACK*/		{SHUTDOWN,&errorComunication},		{SHUTDOWN,&errorComunication},	{WAIT_REQUEST,&AckRecieved },	{SHUTDOWN,&errorComunication} , {SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{SHUTDOWN,&errorComunication}	,{WAIT_ACK,&reSend}							,{SHUTDOWN,&errorComunication} },
-		{ /*SHUTDOWN*/		{SHUTDOWN,&doNothing},				{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing},			{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}			,{SHUTDOWN,&doNothing}						,{SHUTDOWN,&errorComunication} },
+	{						//READY_RECEIVED			ACK_RECEIVED				MOVE_REQUEST_RECEIVED		NET_ERROR					QUIT_REQUEST_RECEIVED		TIMEOUT						TIMEOUT2
+		{ /*READYTOCONNECT*/{WAIT_ACK,&sendReady},		{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{WAIT_REQUEST,&reSend},		{SHUTDOWN,&errorComm}},
+		{ /*WAIT_READY*/    {WAIT_REQUEST,&sendAckr},	{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{WAIT_REQUEST,&reSend},		{SHUTDOWN,&errorComm}},
+		{ /*WAIT_REQUEST*/	{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{WAIT_REQUEST,&sendAck},	{SHUTDOWN,&errorComm},		{SHUTDOWN,&sendAck},		{WAIT_REQUEST,&reSend},		{SHUTDOWN,&errorComm}},
+		{ /*WAIT_ACK*/		{SHUTDOWN,&errorComm},		{WAIT_REQUEST,&rest},		{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{SHUTDOWN,&errorComm},		{WAIT_REQUEST,&reSend},		{SHUTDOWN,&errorComm}},
 	};
 	int estado;
+
 };
 
 //funciones que le corresponden a cada evento de la maquina de estados
 
-void waitReadyConfirm(void* data, Network* network, NetworkFsm* netfsm);
-
-void errorComunication(void* data, Network* network);
-
-void waitMoveConfirm(void* data, Network* network);
-
-void quitAnswer(void* data, Network* network);	//
-
-void sendAck(void* data, Network* network);
-
-void AckRecieved(void* data, Network* network); //
-
-void reSend(void* data, Network* network);
-
-void doNothing(void* data, Network* network);
+Packet sendReady(void* data, Network* network, NetworkFsm* netfsm);
+Packet sendAckr(void* data, Network* network, NetworkFsm* netfsm);
+Packet rest(void* data, Network* network, NetworkFsm* netfsm);
+Packet errorComm(void* data, Network* network, NetworkFsm* netfsm);
+Packet sendAck(void* data, Network* network, NetworkFsm* netfsm);
+Packet reSend(void* data, Network* network, NetworkFsm* netfsm);

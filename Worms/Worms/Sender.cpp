@@ -1,7 +1,8 @@
 #include "Sender.h"
 
-Sender::Sender()
+Sender::Sender(Network* network)
 {
+	this->network = network;
 }
 
 
@@ -11,11 +12,35 @@ Sender::~Sender()
 
 void Sender::update(void * subject, void* tool)
 {
-	//me fijo si el cambio en scene fue relevante para mi (si lo que ccambio fue un worm local) (LASTACTION.ORIGIN == LOCAL?) ENTONCES HAGO.
+	Scenario* Scene = (Scenario*)subject;
 
-	//si lo fue, hago cosas. (mando por network lo que cambio) &0 
-}
+	if ((Scene->getLastAction()).origin == LOCAL) {
+		switch ((Scene->getLastAction()).id) {
+		case LEFT:
+			Packet.header = MOVE_;
+			Packet.action = ACTIONLEFT;
+			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			break;
+		case RIGHT:
+			Packet.header = MOVE_;
+			Packet.action = ACTIONRIGHT;
+			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			break;
+		case JUMP:
+			Packet.header = MOVE_;
+			Packet.action = ACTIONJUMP;
+			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			break;
+		case TOGGLELEFT:
+		case TOGGLERIGHT:
+			Packet.header = MOVE_;
+			Packet.action = ACTIONTOGGLE;
+			Packet.id = (rand() % (0xFFFFFFFF + 1));
+			break;
+		case QUITLOCAL:
+			Packet.header = QUIT_;
+		}
+	}
 
-void Sender::send(std::string package)
-{
+	network->networkFsm.say(Packet, network);
 }

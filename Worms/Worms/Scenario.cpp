@@ -107,6 +107,13 @@ void Scenario::Refresh(AllegroTools* allegroTools)
 	this->notify(allegroTools);
 }
 
+void Scenario::Quit(AllegroTools * allegroTools)
+{
+	this->lastAction.id = QUITLOCAL;
+	this->lastAction.origin = LOCAL;
+	this->notify(allegroTools);
+}
+
 void Scenario::directWorm(Event event, WormDirection dir)
 {
 	for (Worm& worm : Worms) {

@@ -40,6 +40,7 @@ public:
 	void loadOtherIP();//Se fija cual de las dos ips en el .txt no es la que me pasaron por parser y la devuelvo.
 	void sendInfo(std::string msg); //Manda informacion 
 	std::string getInfoTimed(int limitInMs); //Recibe informacion timeado
+	std::string getInfo();
 
 	//Packet queue functions
 	Packet fetchToSend();	//Toma un paquete para mandar
@@ -56,6 +57,7 @@ public:
 	std::string getOwnIP(); //Devuelve propia ip
 	std::string getOtherIP(); //Devuelve la ip ajena
 	int getIfHost(); //Devuelve el modo de conexion
+	int getOtherWormPos();
 
 	//Callbacks
 	Packet sendReady();
@@ -76,6 +78,7 @@ private:
 	std::string myIP; //La direccion IP de la computadora actual.
 	std::string OtherIP;
 	int iAmHost;
+	int otherWormPos;
 
 	//Packet queues
 	std::queue<Packet> toSend;

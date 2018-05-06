@@ -40,14 +40,14 @@
     <Filter Include="Source Files\Misc">
       <UniqueIdentifier>{e39d4095-3674-4973-a185-ab5bf9b4c0a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Misc">
-      <UniqueIdentifier>{ce183d84-c6e8-459e-9c76-8db72f922b5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Observers">
       <UniqueIdentifier>{c12611b7-7bb6-4bca-82d3-552a693dc969}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Network">
       <UniqueIdentifier>{bd7410ec-9eac-47b3-ab84-eb5deb552216}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{ce183d84-c6e8-459e-9c76-8db72f922b5f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

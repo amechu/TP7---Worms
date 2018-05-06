@@ -14,14 +14,14 @@ void Sender::update(void * subject, void* tool)
 {
 	Scenario* Scene = (Scenario*)subject;
 
-	if ((Scene->getLastAction()).origin == LOCAL) {
+	if ((Scene->getLastAction()).origin == LOCAL && (Scene->getLastAction().id != REFRESH)) {
 		switch ((Scene->getLastAction()).id) {
-		case LEFT:
+		case REFRESHLEFT:
 			Packet.header = MOVE_;
 			Packet.action = ACTIONLEFT;
 			Packet.id = (uint32_t)(rand());
 			break;
-		case RIGHT:
+		case REFRESHRIGHT:
 			Packet.header = MOVE_;
 			Packet.action = ACTIONRIGHT;
 			Packet.id = (uint32_t)(rand());
@@ -40,7 +40,6 @@ void Sender::update(void * subject, void* tool)
 		case QUITLOCAL:
 			Packet.header = QUIT_;
 		}
+		network->pushToSend(Packet);
 	}
-
-	network->say(Packet);
 }

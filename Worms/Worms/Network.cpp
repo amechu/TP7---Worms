@@ -191,7 +191,6 @@ Packet Network::listen()
 				if (Packet.header == IAMRDY) {
 					run(READY_RECEIVED);
 					estado = WAIT_REQUEST;
-					socket->non_blocking(true);
 				}
 				else {
 					run(NET_ERROR);
@@ -201,7 +200,6 @@ Packet Network::listen()
 					Packet = waitReady();
 				if (Packet.header == IAMRDY) {
 					run(READY_RECEIVED);
-					socket->non_blocking(true);
 				}
 				else {
 					run(NET_ERROR);
@@ -219,6 +217,8 @@ Packet Network::listen()
 
 		}
 	} while (estado != WAIT_REQUEST && estado != SHUTDOWN);
+
+	socket->non_blocking(true);
 
 	if (estado == SHUTDOWN) {
 		Packet.header = ERROR_;

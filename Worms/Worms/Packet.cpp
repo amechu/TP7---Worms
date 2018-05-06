@@ -11,7 +11,7 @@ Packet::~Packet()
 {
 }
 using namespace gameSettings;
-std::string Packet::makePacket(uint8_t header, int16_t action, int32_t id, int16_t pos)
+std::string Packet::makePacket(uint8_t header, uint16_t action, uint32_t id, uint16_t pos)
 {
 	std::string string;
 
@@ -41,7 +41,7 @@ std::string Packet::makePacket(uint8_t header, int16_t action, int32_t id, int16
 	return string;
 }
 
-std::string Packet::posToBigEndian(int16_t* pos)
+std::string Packet::posToBigEndian(uint16_t* pos)
 {
 	int8_t* p2num = (int8_t*)pos;
 	std::string retValue;
@@ -53,7 +53,7 @@ std::string Packet::posToBigEndian(int16_t* pos)
 	return retValue;
 }
 
-std::string Packet::idToBigEndian(int32_t* id)
+std::string Packet::idToBigEndian(uint32_t* id)
 {
 	int8_t * p2num = (int8_t *)id;
 	std::string retValue;

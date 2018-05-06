@@ -1,5 +1,7 @@
 #include "Network.h"
 
+using namespace std;
+
 
 Network::Network(std::string port)
 {
@@ -33,7 +35,7 @@ void Network::networkProtocol()
 		Packet = fetchToSend();
 		cout << "Network SAY" << endl; //DEBUG
 		say(Packet);
-	}
+	} 
 }
 
 Packet Network::fetchToSend()
@@ -95,7 +97,7 @@ void Network::createLineClient(std::string host, std::string port)
 std::string Network::getInfoTimed(int limitInMs)
 {
 	Timer timer;
-	char buffer[6];
+	char buffer[100];
 	size_t lenght = 0;
 	boost::system::error_code error;
 
@@ -130,7 +132,7 @@ std::string Network::getInfoTimed(int limitInMs)
 
 std::string Network::getInfo()
 {
-	char buffer[6]; //usado solo para recibir iamready o ackr
+	char buffer[100]; //usado solo para recibir iamready o ackr
 	size_t lenght = 0;
 	boost::system::error_code error;
 	std::string retValue;
@@ -347,31 +349,29 @@ Packet Network::waitRequest() {
 	Packet Packet;
 	Packet.header = 0;
 
-	do {
-		cout << "WAITING REQUEST" << endl; //DEBUG
-		string = getInfoTimed(gameSettings::networkTimeLimit);
-		if (string[0] == (char)(MOVE_)) {
-			cout << "GOT REQUEST" << endl; //DEBUG
-			good = true;
-			this->packet.header = MOVE_;
-			this->packet.action = string[1];
-			pointer = (uint8_t*)(&Packet.id);
-			for (int j = 0; j < 4; j++) {
-				pointer[j] = string[5 - j];
-			}
-			run(MOVE_REQUEST_RECEIVED);
-			Packet = this->packet;
+
+	cout << "WAITING REQUEST" << endl; //DEBUG
+	string = getInfo();
+	if (string[0] == (char)(MOVE_)) {
+		cout << "GOT REQUEST" << endl; //DEBUG
+		good = true;
+		this->packet.header = MOVE_;
+		this->packet.action = string[1];
+		pointer = (uint8_t*)(&Packet.id);
+		for (int j = 0; j < 4; j++) {
+			pointer[j] = string[5 - j];
 		}
-		else if ((string.c_str())[0] == (char)(IAMRDY) || (string.c_str())[0] == (char)(ACK_) || (string.c_str())[0] == (char)(ERROR_)) {
-			good = true;
-			Packet = run(NET_ERROR);
-		}
-		else if ((string.c_str())[0] == (char)(QUIT_)) {
-			good = true;
-			Packet = run(QUIT_REQUEST_RECEIVED);
-		}
-		i++;
-	} while (i < 5 && !good);
+		run(MOVE_REQUEST_RECEIVED);
+		Packet = this->packet;
+	}
+	else if ((string.c_str())[0] == (char)(IAMRDY) || (string.c_str())[0] == (char)(ACK_) || (string.c_str())[0] == (char)(ERROR_)) {
+		good = true;
+		Packet = run(NET_ERROR);
+	}
+	else if ((string.c_str())[0] == (char)(QUIT_)) {
+		good = true;
+		Packet = run(QUIT_REQUEST_RECEIVED);
+	}
 
 	if (!good) {
 		Packet.header = 0;

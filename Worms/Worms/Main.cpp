@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 			}
 			else {
 				//drawtryingtoconnect()
-				Network.createLineClient(Network.getOwnIP(), gameSettings::port);
+				Network.createLineClient(Network.getOtherIP(), gameSettings::port);
 			}
 
 			while (Event.type != QUIT && (Network.getIfHost() != gameSettings::QUITTER))

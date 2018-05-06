@@ -11,7 +11,7 @@ Packet::~Packet()
 {
 }
 using namespace gameSettings;
-std::string Packet::makePacket(int8_t header, int16_t action , int32_t id , int16_t pos )
+std::string Packet::makePacket(uint8_t header, int16_t action, int32_t id, int16_t pos)
 {
 	std::string string;
 
@@ -24,7 +24,7 @@ std::string Packet::makePacket(int8_t header, int16_t action , int32_t id , int1
 		break;
 	case IAMRDY:
 		string = IAMRDY;
-		string += (posToBigEndian(&pos));	
+		string += (posToBigEndian(&pos));
 		break;
 	case ACK_:
 		string = ACK_;
@@ -45,9 +45,9 @@ std::string Packet::posToBigEndian(int16_t* pos)
 {
 	int8_t* p2num = (int8_t*)pos;
 	std::string retValue;
-	int8_t array[2] = { *(p2num+1), *(p2num) };
+	int8_t array[2] = { *(p2num + 1), *(p2num) };
 
-	for (int i = 0; i < 2; i ++)
+	for (int i = 0; i < 2; i++)
 		retValue += array[i];
 
 	return retValue;

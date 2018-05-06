@@ -12,6 +12,7 @@
 //Falta: Todo lo de networking, desde mandar paquetes hasta armarlos hasta ver que hacer con el evento quit, o crear worm nuevo a partir de una coneccion.
 //Considerar: los eventos en EventHandling.h que son refresh+algo son para el worm local y generados por allegro, los que son solo algo son para todos
 //los demas worms de networking.
+using namespace std;
 int main(int argc, char* argv[]) {
 
 	Parser Parser;
@@ -23,13 +24,12 @@ int main(int argc, char* argv[]) {
 	Event Event = { 0,0 };
 
 	AllegroTools AllegroTools;
-
 	Scenario Scene;
 	Drawer Drawer;
 	Sender Sender(&Network);
 
 	srand(time(NULL));
-
+	
 	Scene.registerObserver(&Drawer);
 	Scene.registerObserver(&Sender);
 
@@ -57,29 +57,35 @@ int main(int argc, char* argv[]) {
 			}
 			else {
 				//drawtryingtoconnect()
-				Network.createLineClient(Network.getOtherIP(), gameSettings::port);
+				Network.createLineClient(Network.getOwnIP(), gameSettings::port);
 			}
 
 			while (Event.type != QUIT && (Network.getIfHost() != gameSettings::QUITTER))
 			{
+				cout << "Network Protocol" << endl; //DEBUG
 				Network.networkProtocol();
 
+				cout << "Cheking Events" << endl; //DEBUG
 				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 
 				for (int i = 0; i < 2; i++) {
 
 					if (!(EventGenerator.eventQueue.empty())) {
+						cout << "Fetching Events" << endl; //DEBUG
 						Event = EventGenerator.fetchEvent();
 
 						if (Event.type != NOEVENT) {
-
+							cout << "Dispatching.." << endl; //DEBUG
 							Dispatcher.Dispatch(Event, &Scene, &AllegroTools);
+							cout << "Dispatched" << endl; //DEBUG
+						}
+						else {
+							cout << "NOT DISPATCHED -- NOEVENT" << endl; //DEBUG
 						}
 					}
 				}
 			}
 		}
 	}
-	std::cin.get();
 	return 0;
 }

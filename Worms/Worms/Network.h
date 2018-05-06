@@ -57,6 +57,7 @@ public:
 	std::string getOwnIP(); //Devuelve propia ip
 	std::string getOtherIP(); //Devuelve la ip ajena
 	int getIfHost(); //Devuelve el modo de conexion
+	int getOtherWormPos();
 
 	//Callbacks
 	Packet sendReady();
@@ -77,6 +78,7 @@ private:
 	std::string myIP; //La direccion IP de la computadora actual.
 	std::string OtherIP;
 	int iAmHost;
+	int otherWormPos;
 
 	//Packet queues
 	std::queue<Packet> toSend;

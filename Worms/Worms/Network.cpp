@@ -26,10 +26,12 @@ Network::~Network()
 void Network::networkProtocol()
 {
 	Packet Packet;
+	cout << "Network LISTEN" << endl; //DEBUG
 	Packet = listen(); //corre la fsm hasta que vuelva al estado inicial.
 	pushToRecieved(Packet);
 	if (!toSend.empty()) { //si hay algo para decir, lo manda
 		Packet = fetchToSend();
+		cout << "Network SAY" << endl; //DEBUG
 		say(Packet);
 	}
 }
@@ -38,7 +40,7 @@ Packet Network::fetchToSend()
 {
 	Packet returnVal;
 	returnVal.header = 0;
-	
+
 	if (!toSend.empty()) {
 		returnVal = toSend.front();
 		toSend.pop();
@@ -83,7 +85,7 @@ void Network::createLineClient(std::string host, std::string port)
 		boost::asio::connect(*socket, endpoint);
 	}
 
-	catch (std::exception & e) 
+	catch (std::exception & e)
 	{
 		std::cout << "Error al intentar conectar" << std::endl;
 		setIfHost(gameSettings::QUITTER);
@@ -101,12 +103,12 @@ std::string Network::getInfoTimed(int limitInMs)
 
 	bool timeout = false;
 
-	do 
+	do
 	{
 		lenght = this->socket->read_some(boost::asio::buffer(buffer), error);
 		timer.stop();
 
-		if (timer.getTime() > limitInMs && lenght == 0) 
+		if (timer.getTime() > limitInMs && lenght == 0)
 		{														// Pido que lenght == 0 asi no lo paro mientras esta mandando
 			timeout = true;
 		}
@@ -115,7 +117,7 @@ std::string Network::getInfoTimed(int limitInMs)
 
 	std::string retValue;
 
-	if (!timeout) 
+	if (!timeout)
 	{
 		buffer[lenght] = 0;
 		retValue = buffer;
@@ -133,17 +135,14 @@ std::string Network::getInfo()
 	boost::system::error_code error;
 	std::string retValue;
 
-	//do{
-		lenght = this->socket->read_some(boost::asio::buffer(buffer), error);
-	//} while (error);
+	lenght = this->socket->read_some(boost::asio::buffer(buffer), error);
 
-		if (!error) {
-			buffer[lenght] = 0;
-			for (int i = 0; i < lenght; i++) {
-				retValue += buffer[i];
-			}
+	if (!error) {
+		buffer[lenght] = 0;
+		for (int i = 0; i < lenght; i++) {
+			retValue += buffer[i];
 		}
-
+	}
 
 	return retValue;
 }
@@ -187,18 +186,22 @@ Packet Network::listen()
 			if (getIfHost() == gameSettings::HOST) {
 				sendInfo(Packet.makePacket(IAMRDY, 0, 0, gameSettings::WormInitialPosition));
 				this->estado = WAIT_READY;
-					Packet = waitReady();
+				cout << "ESTADO = WAIT_READY" << endl; //DEBUG
+				Packet = waitReady();
 				if (Packet.header == IAMRDY) {
+					otherWormPos = Packet.pos;
 					run(READY_RECEIVED);
 					estado = WAIT_REQUEST;
+					cout << "ESTADO = WAIT_REQUEST" << endl; //DEBUG
 				}
 				else {
 					run(NET_ERROR);
 				}
 			}
 			else if (getIfHost() == gameSettings::CLIENT) {
-					Packet = waitReady();
+				Packet = waitReady();
 				if (Packet.header == IAMRDY) {
+					otherWormPos = Packet.pos;
 					run(READY_RECEIVED);
 				}
 				else {
@@ -231,7 +234,9 @@ Packet Network::listen()
 void Network::say(Packet packet)
 {
 	estado = WAIT_ACK;
+	cout << "ESTADO = WAIT_ACK" << endl; //DEBUG
 	sendInfo(packet.makePacket(packet.header, packet.action, packet.id, packet.pos));
+	cout << "NETWORK SAID SOMETHING" << endl; //DEBUG
 	if (packet.header == QUIT_) {
 		setLastEvent(QUIT_REQUEST_RECEIVED);
 	}
@@ -246,6 +251,7 @@ Packet Network::run(int ev)
 
 	if (ev == TIMEOUT1) {
 		estado = WAIT_REQUEST;
+		cout << "ESTADO = WAIT_REQUEST" << endl; //DEBUG
 		packet = reSend();
 	}
 
@@ -254,10 +260,12 @@ Packet Network::run(int ev)
 		switch (ev) {
 		case READY_RECEIVED:
 			estado = WAIT_ACK;
+			cout << "ESTADO = WAIT_ACK" << endl; //DEBUG
 			packet = sendReady();
 			break;
 		default:
 			estado = SHUTDOWN;
+			cout << "ESTADO = SHUTDOWN" << endl; //DEBUG
 			packet = errorComm();
 		}
 		break;
@@ -268,6 +276,7 @@ Packet Network::run(int ev)
 			break;
 		default:
 			estado = SHUTDOWN;
+			cout << "ESTADO = SHUTDOWN" << endl; //DEBUG
 			packet = errorComm();
 		}
 		break;
@@ -275,21 +284,25 @@ Packet Network::run(int ev)
 		switch (ev) {
 		case MOVE_REQUEST_RECEIVED:
 			estado = WAIT_REQUEST;
+			cout << "ESTADO = WAIT_REQUEST" << endl; //DEBUG
 			packet = sendAck();
 			break;
 		}
 	default:
 		estado = SHUTDOWN;
+		cout << "ESTADO = SHUTDOWN" << endl; //DEBUG
 		packet = errorComm();
 		break;
 	case WAIT_ACK:
 		switch (ev) {
 		case ACK_RECEIVED:
 			estado = WAIT_REQUEST;
+			cout << "ESTADO = WAIT_REQUEST" << endl; //DEBUG
 			packet = rest();
 			break;
 		default:
 			estado = SHUTDOWN;
+			cout << "ESTADO = SHUTDOWN" << endl; //DEBUG
 			packet = errorComm();
 		}
 		break;
@@ -307,8 +320,11 @@ Packet Network::waitReady() {
 	Packet Packet;
 	Packet.header = 0;
 
+	cout << "WAITING IAMREADY" << endl; //DEBUG
 		string = getInfo();
 		if ((string.c_str())[0] == (char)(IAMRDY)) {
+			cout << "GOT IAMREADY" << endl; //DEBUG
+			good = true;
 			aux += string[1];
 			aux += string[2];
 			pointer = (uint8_t*)(&(Packet.pos));
@@ -319,7 +335,6 @@ Packet Network::waitReady() {
 		else {
 			Packet = run(NET_ERROR);
 		}
-
 	return Packet;
 }
 
@@ -333,8 +348,10 @@ Packet Network::waitRequest() {
 	Packet.header = 0;
 
 	do {
-		string = getInfo();
+		cout << "WAITING REQUEST" << endl; //DEBUG
+		string = getInfoTimed(gameSettings::networkTimeLimit);
 		if (string[0] == (char)(MOVE_)) {
+			cout << "GOT REQUEST" << endl; //DEBUG
 			good = true;
 			this->packet.header = MOVE_;
 			this->packet.action = string[1];
@@ -399,14 +416,21 @@ Packet Network::waitAck() {
 	uint8_t* pointer;
 	Packet Packet;
 	Packet.header = 0;
+	static bool first = true;
 
 	if (getLastEvent() == READY_RECEIVED || getLastEvent() == QUIT_REQUEST_RECEIVED) {
 
 		do {
+			cout << "WAITING ACK READY OR QUIT" << endl; //DEBUG
+			if (first) {
+				first = false;
+				socket->non_blocking(true);
+			}
 			string = getInfoTimed(gameSettings::networkTimeLimit);
 			if ((string.c_str())[0] == (char)(ACK_)) {
+				cout << "GOT ACK" << endl; //DEBUG
 				good = true;
-				if (!(string[0] == 0))
+				if (!(string[1] == 0))
 					good = false;
 				if (getLastEvent() == READY_RECEIVED) {
 					Packet.header = ACK_;
@@ -433,8 +457,10 @@ Packet Network::waitAck() {
 	}
 	else {
 		do {
+			cout << "WAITING ACK" << endl; //DEBUG
 			string = getInfo();
 			if ((string.c_str())[0] == (char)(ACK_)) {
+				cout << "GOT ACK" << endl; //DEBUG
 				good = true;
 				pointer = (uint8_t*)(&(Packet.id));
 				for (int j = 1; j < 5; j++) {
@@ -512,11 +538,17 @@ int Network::getIfHost()
 	return this->iAmHost;
 }
 
+int Network::getOtherWormPos()
+{
+	return otherWormPos;
+}
+
 Packet Network::sendReady()
 {
 	Packet packet;
 	packet.header = 0;
 	sendInfo(packet.makePacket(IAMRDY, 0, 0, gameSettings::WormInitialPosition + 400));
+	cout << "SENT IAMREADY" << endl; //DEBUG
 	return packet;
 }
 
@@ -525,12 +557,14 @@ Packet Network::sendAckr()
 	Packet packet;
 	packet.header = 0;
 	sendInfo(packet.makePacket(ACK_, 0, 0, 0));
+	cout << "SENT ACK IAMREADY" << endl; //DEBUG
 	return packet;
 }
 
 Packet Network::rest()
 {
 	Packet packet;
+	setLastEvent(ACK_RECEIVED);
 	packet.header = 0;
 	return packet;
 }
@@ -539,6 +573,7 @@ Packet Network::errorComm()
 {
 	Packet packet;
 	packet.header = ERROR_;
+	cout << "PACKET ERROR" << endl; //DEBUG
 	return packet;
 }
 
@@ -548,9 +583,11 @@ Packet Network::sendAck()
 	packet.header = 0;
 	if (getLastEvent() == MOVE_REQUEST_RECEIVED) {
 		sendInfo(packet.makePacket(ACK_, 0, (getPacket()).id, 0));
+		cout << "SENT ACK MOVE" << endl; //DEBUG
 	}
 	else if (getLastEvent() == QUIT_REQUEST_RECEIVED) {
 		sendInfo(packet.makePacket(ACK_, 0, 0, 0));
+		cout << "SENT ACK QUIT" << endl; //DEBUG
 		packet.header = QUIT_;
 	}
 	return packet;

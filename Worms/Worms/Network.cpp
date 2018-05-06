@@ -133,14 +133,17 @@ std::string Network::getInfo()
 	boost::system::error_code error;
 	std::string retValue;
 
-	do{
+	//do{
 		lenght = this->socket->read_some(boost::asio::buffer(buffer), error);
-	} while (error);
+	//} while (error);
 
-	buffer[lenght] = 0;
-	for (int i = 0; i < lenght; i++) {
-		retValue += buffer[i];
-	}
+		if (!error) {
+			buffer[lenght] = 0;
+			for (int i = 0; i < lenght; i++) {
+				retValue += buffer[i];
+			}
+		}
+
 
 	return retValue;
 }
@@ -400,7 +403,7 @@ Packet Network::waitAck() {
 	if (getLastEvent() == READY_RECEIVED || getLastEvent() == QUIT_REQUEST_RECEIVED) {
 
 		do {
-			string = getInfo();
+			string = getInfoTimed(gameSettings::networkTimeLimit);
 			if ((string.c_str())[0] == (char)(ACK_)) {
 				good = true;
 				if (!(string[0] == 0))

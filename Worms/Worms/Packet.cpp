@@ -16,24 +16,24 @@ std::string Packet::makePacket(int8_t header, int16_t action , int32_t id , int1
 	std::string string;
 
 	switch (header) {
-	case QUITPACKET:
+	case QUIT_:
 		string = QUIT_;
 		break;
-	case ERRORNET:
+	case ERROR_:
 		string = ERROR_;
 		break;
-	case I_AM_READY:
+	case IAMRDY:
 		string = IAMRDY;
-		string += (posToBigEndian(pos));	
+		string += (posToBigEndian(&pos));	
 		break;
-	case ACK:
+	case ACK_:
 		string = ACK_;
-		string += (idToBigEndian(id));
+		string += (idToBigEndian(&id));
 		break;
-	case MOVE:
+	case MOVE_:
 		string = MOVE_;
 		string += action;
-		string += (idToBigEndian(id));
+		string += (idToBigEndian(&id));
 		break;
 	}
 
@@ -41,24 +41,31 @@ std::string Packet::makePacket(int8_t header, int16_t action , int32_t id , int1
 	return string;
 }
 
-std::string Packet::posToBigEndian(uint16_t pos)
+std::string Packet::posToBigEndian(int16_t* pos)
 {
-	std::string string;
-	uint8_t* pospointer = (uint8_t*)pos;
+	int8_t* p2num = (int8_t*)pos;
+	std::string retValue;
+	int8_t array[2] = { *(p2num+1), *(p2num) };
 
-	for (int i = 1; i = 0; i--) {
-		string += pospointer[i];
-	}
-	return string;
+	for (int i = 0; i < 2; i ++)
+		retValue += array[i];
+
+	return retValue;
 }
 
-std::string Packet::idToBigEndian(uint32_t id)
+std::string Packet::idToBigEndian(int32_t* id)
 {
-	std::string string;
-	uint8_t* pospointer = (uint8_t*)pos;
+	int8_t * p2num = (int8_t *)id;
+	std::string retValue;
+	int8_t array[4] = { *(id + 3), *(id + 2), *(id + 1), *id };
 
-	for (int i = 3; i = 0; i--) {
-		string += pospointer[i];
+	if (*id == 0) {
+		retValue[0] = 0;
 	}
-	return string;
+	else {
+		for (int i = 0; i < 4; i++)
+			retValue += array[i];
+	}
+
+	return retValue;
 }

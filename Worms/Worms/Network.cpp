@@ -10,10 +10,15 @@ Network::Network(std::string port)
 
 Network::~Network()
 {
-	acceptor->close();
 	socket->close();
-	delete resolver;
-	delete acceptor;
+	if (getIfHost() == gameSettings::HOST)
+	{
+		delete acceptor;
+	}
+	else if (getIfHost() == gameSettings::CLIENT)
+	{
+		delete resolver;
+	}
 	delete socket;
 	delete IO_handler;
 }
@@ -67,7 +72,6 @@ void Network::pushToRecieved(Packet packet)
 void Network::createLineServer()
 {
 	acceptor->accept(*socket);
-	socket->non_blocking(true);
 }
 
 void Network::createLineClient(std::string host, std::string port)
@@ -77,8 +81,6 @@ void Network::createLineClient(std::string host, std::string port)
 		endpoint = resolver->resolve(boost::asio::ip::tcp::resolver::query(host, port));
 
 		boost::asio::connect(*socket, endpoint);
-
-		socket->non_blocking(true);
 	}
 
 	catch (std::exception & e) 
@@ -124,6 +126,24 @@ std::string Network::getInfoTimed(int limitInMs)
 	return retValue;
 }
 
+std::string Network::getInfo()
+{
+	char buffer[6]; //usado solo para recibir iamready o ackr
+	size_t lenght = 0;
+	boost::system::error_code error;
+	std::string retValue;
+
+	do{
+		lenght = this->socket->read_some(boost::asio::buffer(buffer), error);
+	} while (error);
+
+	buffer[lenght] = 0;
+	for (int i = 0; i < lenght; i++) {
+		retValue += buffer[i];
+	}
+
+	return retValue;
+}
 void Network::sendInfo(std::string msg)
 {																//&0 hacer  que funque con server y no client
 	size_t lenght = 0;
@@ -157,24 +177,28 @@ Packet Network::listen()
 	Packet Packet;
 	std::string string;
 	bool check = false, good = false;
+	int timeoutcount = 0;
 
 	do {
 		if (estado == READYTOCONNECT) {
-			if (getIfHost()) {
+			if (getIfHost() == gameSettings::HOST) {
 				sendInfo(Packet.makePacket(IAMRDY, 0, 0, gameSettings::WormInitialPosition));
 				this->estado = WAIT_READY;
-				Packet = waitReady();
+					Packet = waitReady();
 				if (Packet.header == IAMRDY) {
 					run(READY_RECEIVED);
+					estado = WAIT_REQUEST;
+					socket->non_blocking(true);
 				}
 				else {
 					run(NET_ERROR);
 				}
 			}
-			else {
-				Packet = waitReady();
+			else if (getIfHost() == gameSettings::CLIENT) {
+					Packet = waitReady();
 				if (Packet.header == IAMRDY) {
 					run(READY_RECEIVED);
+					socket->non_blocking(true);
 				}
 				else {
 					run(NET_ERROR);
@@ -191,7 +215,12 @@ Packet Network::listen()
 			Packet = waitAck();
 
 		}
-	} while (estado != WAIT_REQUEST);
+	} while (estado != WAIT_REQUEST && estado != SHUTDOWN);
+
+	if (estado == SHUTDOWN) {
+		Packet.header = ERROR_;
+		Packet.id = 0;
+	}
 
 	return Packet;
 }
@@ -268,36 +297,25 @@ Packet Network::run(int ev)
 
 Packet Network::waitReady() {
 
-	int i = 0, pos = 0;
-	bool check = false, good = false;
+	int i = 0;
+	bool good = false;
 	std::string string, aux;
+	uint8_t* pointer;
 	Packet Packet;
 	Packet.header = 0;
 
-	while (i < 5 || !check) {
-		string = getInfoTimed(20);
-		if (string != "timeout") {
-			check = true;
-			if ((string.c_str())[0] == (char)(IAMRDY)) {
-				good = true;
-				aux += (string.c_str())[2];
-				aux += (string.c_str())[1];
-				pos = stoi(aux);
-				Packet.header = IAMRDY;
-				Packet.pos = pos;
-			}
-			else {
-				run(NET_ERROR);
-				Packet.header = ERROR_;
-			}
+		string = getInfo();
+		if ((string.c_str())[0] == (char)(IAMRDY)) {
+			aux += string[1];
+			aux += string[2];
+			pointer = (uint8_t*)(&(Packet.pos));
+			pointer[0] = aux[1];
+			pointer[1] = aux[0];
+			Packet.header = IAMRDY;
 		}
-		else
-			i++;
-	}
-	if (!good) {
-		run(TIMEOUT2);
-		Packet.header = ERROR_;
-	}
+		else {
+			Packet = run(NET_ERROR);
+		}
 
 	return Packet;
 }
@@ -307,39 +325,65 @@ Packet Network::waitRequest() {
 	int i = 0, pos = 0;
 	bool check = false, good = false;
 	std::string string, aux;
+	uint8_t* pointer;
 	Packet Packet;
 	Packet.header = 0;
 
-	while (i < 5 || !check) {
-		string = getInfoTimed(20);
-		if (string != "timeout") {
-			check = true;
-			if ((string.c_str())[0] == (char)(MOVE_)) {
-				good = true;
-				aux += (string.c_str())[5];
-				aux += (string.c_str())[4];
-				aux += (string.c_str())[3];
-				aux += (string.c_str())[2];
-				this->packet.header = MOVE_;
-				this->packet.action = (string.c_str())[1];
-				this->packet.id = stoi(aux);
-				run(MOVE_REQUEST_RECEIVED);
-				Packet = this->packet;
+	do {
+		string = getInfo();
+		if (string[0] == (char)(MOVE_)) {
+			good = true;
+			this->packet.header = MOVE_;
+			this->packet.action = string[1];
+			pointer = (uint8_t*)(&Packet.id);
+			for (int j = 0; j < 4; j++) {
+				pointer[j] = string[5 - j];
 			}
-			else if ((string.c_str())[0] == (char)(IAMRDY) || (string.c_str())[0] == (char)(ACK_) || (string.c_str())[0] == (char)(ERROR_)) {
-				good = true;
-				Packet = run(NET_ERROR);
-			}
-			else if ((string.c_str())[0] == (char)(QUIT_)) {
-				Packet = run(QUIT_REQUEST_RECEIVED);
-			}
+			run(MOVE_REQUEST_RECEIVED);
+			Packet = this->packet;
 		}
-		else
-			i++;
-	}
+		else if ((string.c_str())[0] == (char)(IAMRDY) || (string.c_str())[0] == (char)(ACK_) || (string.c_str())[0] == (char)(ERROR_)) {
+			good = true;
+			Packet = run(NET_ERROR);
+		}
+		else if ((string.c_str())[0] == (char)(QUIT_)) {
+			good = true;
+			Packet = run(QUIT_REQUEST_RECEIVED);
+		}
+		i++;
+	} while (i < 5 && !good);
+
 	if (!good) {
 		Packet.header = 0;
+		this->packet.header = 0;
 	}
+
+	//string = getInfoTimed(gameSettings::networkTimeLimit);
+	//if (string != "timeout") {
+	//	check = true;
+	//	if ((string.c_str())[0] == (char)(MOVE_)) {
+	//		good = true;
+	//		std::cout << "Received REQUEST" << std::endl;
+	//		this->packet.header = MOVE_;
+	//		this->packet.action = (string.c_str())[1];
+	//		pointer = (uint8_t*)(&Packet.id);
+	//		for (int j = 0; j < 4; j++) {
+	//			pointer[j] = string[5 - j];
+	//		}
+	//		run(MOVE_REQUEST_RECEIVED);
+	//		Packet = this->packet;
+	//	}
+	//	else if ((string.c_str())[0] == (char)(IAMRDY) || (string.c_str())[0] == (char)(ACK_) || (string.c_str())[0] == (char)(ERROR_)) {
+	//		good = true;
+	//		Packet = run(NET_ERROR);
+	//	}
+	//	else if ((string.c_str())[0] == (char)(QUIT_)) {
+	//		Packet = run(QUIT_REQUEST_RECEIVED);
+	//	}
+	//}
+	//if (!good) {
+	//	Packet.header = 0;
+	//}
 
 	return Packet;
 }
@@ -349,55 +393,61 @@ Packet Network::waitAck() {
 	int i = 0, pos = 0;
 	bool check = false, good = false;
 	std::string string, aux;
+	uint8_t* pointer;
 	Packet Packet;
 	Packet.header = 0;
 
-	while (i < 5 || !check) {
-		string = getInfoTimed(20);
-		if (string != "timeout") {
-			check = true;
+	if (getLastEvent() == READY_RECEIVED || getLastEvent() == QUIT_REQUEST_RECEIVED) {
+
+		do {
+			string = getInfo();
 			if ((string.c_str())[0] == (char)(ACK_)) {
 				good = true;
-				aux += (string.c_str())[4];
-				aux += (string.c_str())[3];
-				aux += (string.c_str())[2];
-				aux += (string.c_str())[1];
+				if (!(string[0] == 0))
+					good = false;
 				if (getLastEvent() == READY_RECEIVED) {
-					if (!(stoi(aux) == 0)) {
-						run(NET_ERROR);
-					}
-					else {
-						Packet.header = ACK_;
-						Packet.id = 0;
-					}
-				}
-				else if (getLastEvent() == QUIT_REQUEST_RECEIVED) {
-					if (!(stoi(aux) == 0)) {
-						run(NET_ERROR);
-					}
-					else {
-						Packet.header = QUIT_;
-						Packet.id = 0;
-					}
+					Packet.header = ACK_;
 				}
 				else {
-					if (stoi(aux) == this->packet.id) {
-						run(ACK_RECEIVED);
-					}
+					Packet.header = QUIT_;
+				}
+
+				if (good) {
+					Packet.id = 0;
+					run(ACK_RECEIVED);
+				}
+				else {
+					run(NET_ERROR);
+					Packet.header = ERROR_;
+				}
+			}
+			else {
+				run(NET_ERROR);
+				Packet.header = ERROR_;
+			}
+			i++;
+		} while (i < 5 && !good);
+	}
+	else {
+		do {
+			string = getInfo();
+			if ((string.c_str())[0] == (char)(ACK_)) {
+				good = true;
+				pointer = (uint8_t*)(&(Packet.id));
+				for (int j = 1; j < 5; j++) {
+					pointer[j - 1] = string[5 - j];
 				}
 			}
 			else {
 				good = true;
 				Packet = run(NET_ERROR);
 			}
-		}
-		else
 			i++;
+		} while (i < 5 && !good);
+		if (!good) {
+			Packet.header = 0;
+		}
 	}
-	if (!good) {
-		Packet.header = 0;
-	}
-
 	return Packet;
 }
 

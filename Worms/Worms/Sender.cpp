@@ -14,7 +14,7 @@ void Sender::update(void * subject, void* tool)
 {
 	Scenario* Scene = (Scenario*)subject;
 
-	if ((Scene->getLastAction()).origin == LOCAL) {
+	if ((Scene->getLastAction()).origin == LOCAL && (Scene->getLastAction().id != REFRESH)) {
 		switch ((Scene->getLastAction()).id) {
 		case LEFT:
 			Packet.header = MOVE_;
@@ -40,7 +40,6 @@ void Sender::update(void * subject, void* tool)
 		case QUITLOCAL:
 			Packet.header = QUIT_;
 		}
+		network->say(Packet);
 	}
-
-	network->say(Packet);
 }

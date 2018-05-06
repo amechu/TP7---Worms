@@ -62,19 +62,19 @@ int main(int argc, char* argv[]) {
 
 			while (Event.type != QUIT && (Network.getIfHost() != gameSettings::QUITTER))
 			{
+				Network.networkProtocol();
 
 				EventGenerator.checkIncomingEvents(&AllegroTools, &Network);
 
 				for (int i = 0; i < 2; i++) {
 
 					if (!(EventGenerator.eventQueue.empty())) {
-
 						Event = EventGenerator.fetchEvent();
 
-						if (Event.type != NOEVENT)
+						if (Event.type != NOEVENT) {
 
 							Dispatcher.Dispatch(Event, &Scene, &AllegroTools);
-
+						}
 					}
 				}
 			}

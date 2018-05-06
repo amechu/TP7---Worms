@@ -40,6 +40,7 @@ public:
 	void loadOtherIP();//Se fija cual de las dos ips en el .txt no es la que me pasaron por parser y la devuelvo.
 	void sendInfo(std::string msg); //Manda informacion 
 	std::string getInfoTimed(int limitInMs); //Recibe informacion timeado
+	std::string getInfo();
 
 	//Packet queue functions
 	Packet fetchToSend();	//Toma un paquete para mandar

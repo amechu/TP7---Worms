@@ -31,7 +31,6 @@ Event EventGenerator::transformAllegroEvent(AllegroTools * allegroTools)
 	Event Event = { NOEVENT , 0 };
 
 	if (al_get_next_event(allegroTools->Queue, &allegroEvent)) {
-
 		if (allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 			Event.type = QUITLOCAL;
 		}
@@ -140,7 +139,6 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 	Event Event = { NOEVENT, 1 }; // lo puse en mausculas pq hace lio con otro event de windows
 	Packet Packet;
 	Packet = Network->fetchRecieved();
-
 	if (Packet.header == MOVE_ )
 	{
 		if (Packet.action == ACTIONLEFT)
@@ -163,7 +161,7 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 	else if ((Packet.header == ACK_) && (Packet.id == 0)) // caso del primer i'm ready
 	{
 		Event.type = NEWWORM; //ME LLEGO EL ACK QUE ENTENDIO CREO EL WORM
-		pos = Packet.pos;
+		Event.id = Packet.pos;
 	}
 	else if ((Packet.header == ERROR_))
 	{
@@ -172,6 +170,11 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 	else if ((Packet.header == QUIT_))
 	{
 		Event.type = QUIT;
+	}
+	else if ((Packet.header == IAMRDY)) // caso del primer i'm ready
+	{
+		Event.type = NEWWORM; //ME LLEGO EL ACK QUE ENTENDIO CREO EL WORM
+		Event.id = Packet.pos;
 	}
 	else
 	{
@@ -182,7 +185,6 @@ Event EventGenerator::transformNetworkEvent(Network* Network)
 
 void EventGenerator::checkIncomingEvents(AllegroTools * allegroTools, Network * Network)
 {
-	Network->networkProtocol();
 	pushEvent(transformAllegroEvent(allegroTools));
 	pushEvent(transformNetworkEvent(Network));
 }

@@ -25,12 +25,12 @@ public:
 	~Packet();
 
 	std::string makePacket(int8_t type, int16_t action=0, int32_t id=0, int16_t pos=0);
-	std::string posToBigEndian(uint16_t pos);
-	std::string idToBigEndian(uint32_t id);
-	uint8_t header;
-	uint8_t action;
-	uint32_t id;
-	uint16_t pos;
+	std::string posToBigEndian(int16_t* pos);
+	std::string idToBigEndian(int32_t* id);
+	int8_t header;
+	int8_t action;
+	int32_t id;
+	int16_t pos;
 
 };
 
